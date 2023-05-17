@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "rabbit",
+    srcs = [
+        "client.go",
+        "settings.go",
+    ],
+    importpath = "github.com/evently/events-manager/infrastructure/rabbit",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_rabbitmq_amqp091_go//:go_default_library"],
+)
