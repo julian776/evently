@@ -1,0 +1,34 @@
+services:
+  events-manager:
+    # change to image if you pre built
+    build: ./events-manager
+    ports:
+      - 8080:8080
+
+  postgres_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 1234
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:9650
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+
+volumes:
+  postgres_data:
+  mongo_data:
