@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"events-manager/infrastructure/http/handlers"
 	"log"
-	"main/infrastructure/http/handlers"
 	"os/signal"
 	"syscall"
 )

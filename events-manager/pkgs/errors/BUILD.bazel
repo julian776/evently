@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "errors",
-    srcs = ["checker.go"],
-    importpath = "github.com/evently/go_libs/errors",
-    visibility = ["//visibility:public"],
-)

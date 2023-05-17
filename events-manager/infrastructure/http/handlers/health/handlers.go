@@ -1,7 +1,7 @@
 package health
 
 import (
-	app "main/infrastructure/app/domain"
+	app "events-manager/infrastructure/app/domain"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

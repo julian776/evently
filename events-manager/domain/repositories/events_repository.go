@@ -2,7 +2,7 @@ package events
 
 import (
 	"context"
-	"main/domain/repositories/models"
+	"events-manager/domain/repositories/models"
 )
 
 type EventsRepository interface {

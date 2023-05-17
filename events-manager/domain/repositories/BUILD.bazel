@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "repositories",
-    srcs = ["events_repository.go"],
-    importpath = "github.com/evently/events-manager/domain/repositories",
-    visibility = ["//visibility:public"],
-)

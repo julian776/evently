@@ -1,4 +1,4 @@
-package events
+package postgredb
 
 type PostgreSettigs struct {
 	Host     string `envconfig:"POSTGRES_HOST" required:"true"`

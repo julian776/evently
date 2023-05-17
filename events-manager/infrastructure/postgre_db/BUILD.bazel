@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "postgre_db",
-    srcs = ["settings.go"],
-    importpath = "github.com/evently/events-manager/infrastructure/postgre_db",
-    visibility = ["//visibility:public"],
-)
