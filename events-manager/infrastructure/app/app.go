@@ -30,7 +30,6 @@ func NewApp(
 		appSettings,
 		rabbitClient,
 	}
-
 }
 
 func (a *App) Run(ctx context.Context) error {

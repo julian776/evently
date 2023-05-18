@@ -1,4 +1,4 @@
-package app
+package domain
 
 const (
 	APP_NAME    = "events_manager"

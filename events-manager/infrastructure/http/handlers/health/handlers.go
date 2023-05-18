@@ -1,7 +1,7 @@
 package health
 
 import (
-	app "events-manager/infrastructure/app/domain"
+	domain "events-manager/domain/app"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,8 +10,8 @@ import (
 func healthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(http.StatusOK, OkStatus{
-			AppName:    app.APP_NAME,
-			AppVersion: app.APP_VERSION,
+			AppName:    domain.APP_NAME,
+			AppVersion: domain.APP_VERSION,
 		})
 	}
 }

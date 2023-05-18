@@ -7,6 +7,8 @@ type Event struct {
 
 	Description string `json:"description,omitempty"`
 
+	UserId string `json:"userId,omitempty"`
+
 	Location string `json:"location,omitempty"`
 
 	StartTime string `json:"start_time,omitempty"`

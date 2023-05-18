@@ -1,7 +1,7 @@
 package app
 
 import (
-	postgredb "events-manager/infrastructure/postgre_db"
+	postgredb "events-manager/infrastructure/events/postgre_db"
 	"events-manager/infrastructure/rabbit"
 	"events-manager/pkgs/logger"
 	"fmt"
