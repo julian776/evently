@@ -1,9 +1,17 @@
 # Stage 1
 FROM node
+
 WORKDIR /app
-COPY . .
+
+COPY ["package.json", "pnpm-lock.yaml", "./"]
+
 RUN npm install
+
+COPY . .
+
 RUN npm run build --prod
 # Stage 2
-FROM nginx:alpine
-COPY --from=node /app/dist/angular-app /usr/share/nginx/html
+# FROM nginx:alpine
+
+# COPY --from=node ./dist/angular-app /usr/share/nginx/html
+

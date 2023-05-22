@@ -4,6 +4,13 @@ services:
     build: ./events-manager
     ports:
       - 8080:8080
+    env_file:
+      - ./events-manager/.env
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      #postgres_db: 
+      #  condition: service_healthy
 
   postgres_db:
     image: postgres
@@ -12,6 +19,12 @@ services:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./configs/init.sql:/docker-entrypoint-initdb.d/init.sql
+    # healthcheck:
+    #   test: [ "CMD", "pg_isready", "-q", "-d", "devdb", "-U", "dev" ]
+    #   timeout: 45s
+    #   interval: 10s
+    #   retries: 10
     environment:
       POSTGRES_PASSWORD: 1234
 
@@ -19,7 +32,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:9650
+      - 9650:8080
 
   mongo:
     image: mongo
@@ -35,11 +48,18 @@ services:
       - 3000:3000
   
   rabbit:
-    image: rabbitmq:3
-    ports:
-      - 5672:5672
+    build: ./configs/rabbit
+    ports: 
+        - "15672:15672"
+        - "5672:5672"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
-      - hostname=rabbit
+      hostname: 'rabbit'
+      RABBITMQ_ERLANG_COOKIE: 'secret cookie of julian'
 
 volumes:
   postgres_data:

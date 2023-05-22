@@ -1,5 +1,7 @@
 .env
 
+configs.json
+
 /public
 resources/
 node_modules/
