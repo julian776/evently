@@ -5,6 +5,7 @@ import (
 	"events-manager/domain/broker"
 	"events-manager/domain/events/models"
 	"events-manager/domain/events/repositories"
+	"events-manager/infrastructure/events"
 	"events-manager/pkgs/logger"
 )
 
@@ -12,6 +13,7 @@ type CreateEventUseCase struct {
 	logger           logger.Logger
 	publisher        broker.BrokerPublisher
 	eventsRepository repositories.EventsRepository
+	eventsSettings   events.EventsSettings
 }
 
 // It creates the event and publishes an event.
@@ -24,7 +26,12 @@ func (u *CreateEventUseCase) Execute(ctx context.Context, event models.Event) (m
 		return models.Event{}, err
 	}
 
-	err = u.publisher.PublishMessageWithContext(ctx, "events", eventCreated, models.EVENT_CREATED)
+	err = u.publisher.PublishMessageWithContext(
+		ctx,
+		u.eventsSettings.Queue,
+		eventCreated,
+		models.EVENT_CREATED,
+	)
 	if err != nil {
 		u.logger.Errorf("Error publishing event %s", err.Error())
 		return models.Event{}, err
@@ -37,10 +44,12 @@ func NewCreateEventUseCase(
 	logger logger.Logger,
 	publisher broker.BrokerPublisher,
 	eventsRepository repositories.EventsRepository,
+	eventsSettings events.EventsSettings,
 ) *CreateEventUseCase {
 	return &CreateEventUseCase{
 		logger,
 		publisher,
 		eventsRepository,
+		eventsSettings,
 	}
 }

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"events-manager/infrastructure/events"
 	postgredb "events-manager/infrastructure/events/adapters/postgre_db"
 	"events-manager/infrastructure/rabbit"
 	"events-manager/pkgs/logger"
@@ -17,6 +18,7 @@ var SettingsProvider = wire.NewSet(
 	GetLoggerSettings,
 	GetPostgreSettings,
 	GetRabbitSettings,
+	GetEventSettings,
 )
 
 var appSettings *AppSettings
@@ -25,6 +27,7 @@ type AppSettings struct {
 	Logger         *logger.Settings
 	Rabbit         *rabbit.Settings
 	PostgreSettigs *postgredb.PostgreSettigs
+	EventsSettings *events.EventsSettings
 	Port           uint64 `envconfig:"PORT" required:"true"`
 	ApiKey         string `envconfig:"API_KEY" default:""`
 }
@@ -56,6 +59,10 @@ func GetRabbitSettings(settings AppSettings) rabbit.Settings {
 
 func GetPostgreSettings(settings AppSettings) postgredb.PostgreSettigs {
 	return *settings.PostgreSettigs
+}
+
+func GetEventSettings(settings AppSettings) events.EventsSettings {
+	return *settings.EventsSettings
 }
 
 func loadConfigFile() (AppSettings, error) {

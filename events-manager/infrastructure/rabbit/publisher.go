@@ -28,7 +28,10 @@ func (c *RabbitPublisher) Stop() {
 	c.Ch.Close()
 }
 
-func NewRabbitPublisher(logger logger.Logger, settings Settings) *RabbitPublisher {
+func NewRabbitPublisher(
+	logger logger.Logger,
+	settings Settings,
+) *RabbitPublisher {
 	if settings.Url == "" {
 		logger.Errorf("Can not connect to RabbitMQ url is blank")
 		return &RabbitPublisher{}

@@ -81,9 +81,10 @@ func (r *PostgreRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `insert into events(title, description, location, organizerName, organizerEmail, startTime, endTime) values($1, $2, $3, $4, $5, $6, $7);`
+	query := `insert into events(title, description, location, organizerName, organizerEmail, startTime, endTime) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;`
 
-	_, err := r.db.ExecContext(
+	var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
+	err := r.db.QueryRowContext(
 		ctx,
 		query,
 		event.Title,
@@ -93,13 +94,33 @@ func (r *PostgreRepository) CreateEvent(
 		event.OrganizerEmail,
 		event.StartTime,
 		event.EndTime,
+	).Scan(
+		&id,
+		&title,
+		&description,
+		&location,
+		&organizerName,
+		&organizerEmail,
+		&startTime,
+		&endTime,
 	)
+
+	eventCreated := models.Event{
+		Id:             id,
+		Title:          title,
+		Description:    description,
+		Location:       location,
+		OrganizerName:  organizerName,
+		OrganizerEmail: organizerEmail,
+		StartTime:      startTime,
+		EndTime:        endTime,
+	}
 
 	if err != nil {
 		return models.Event{}, err
 	}
 
-	return event, nil
+	return eventCreated, nil
 }
 
 func (r *PostgreRepository) GetAllEventsByOrganizerEmail(
