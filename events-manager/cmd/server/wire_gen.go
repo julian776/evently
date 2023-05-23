@@ -29,6 +29,9 @@ func CreateApp() *app.App {
 	postgreSettigs := app.GetPostgreSettings(appSettings)
 	postgreRepository := postgredb.NewPostgreRepository(sugaredLogger, postgreSettigs)
 	createEventUseCase := events.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
-	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase)
+	getEventByIdUseCase := events.NewGetEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
+	deleteEventByIdUseCase := events.NewDeleteEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
+	updateEventUseCase := events.NewUpdateEventUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
+	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase, getEventByIdUseCase, deleteEventByIdUseCase, updateEventUseCase)
 	return appApp
 }

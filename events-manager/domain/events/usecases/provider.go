@@ -6,4 +6,7 @@ import (
 
 var UseCasesProvider = wire.NewSet(
 	NewCreateEventUseCase,
+	NewGetEventByIdUseCase,
+	NewDeleteEventByIdUseCase,
+	NewUpdateEventUseCase,
 )

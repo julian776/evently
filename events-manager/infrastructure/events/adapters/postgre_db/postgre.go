@@ -36,32 +36,45 @@ func (r *PostgreRepository) GetEventById(
 	ctx context.Context,
 	id string,
 ) (models.Event, error) {
-	var article models.Event
+	var event models.Event
 
-	query := `select title, content from events where id=$1`
+	query := `select title, description, location, organizerName, organizerEmail, startTime, endTime from events where id=$1`
 	row, err := r.db.QueryContext(ctx, query, id)
 	if err != nil {
-		return article, err
+		return event, err
 	}
 
 	defer row.Close()
 
 	if row.Next() {
-		var title, content string
+		var title, description, location, organizerName, organizerEmail, startTime, endTime string
 
-		err := row.Scan(&title, &content)
+		err := row.Scan(
+			&title,
+			&description,
+			&location,
+			&organizerName,
+			&organizerEmail,
+			&startTime,
+			&endTime,
+		)
 		if err != nil {
-			return article, err
+			return models.Event{}, err
 		}
 
-		article = models.Event{
-			Id:          id,
-			Title:       title,
-			Description: content,
+		event = models.Event{
+			Id:             id,
+			Title:          title,
+			Description:    description,
+			Location:       location,
+			OrganizerName:  organizerName,
+			OrganizerEmail: organizerEmail,
+			StartTime:      startTime,
+			EndTime:        endTime,
 		}
 	}
 
-	return models.Event{}, nil
+	return event, nil
 }
 
 func (r *PostgreRepository) CreateEvent(
@@ -100,9 +113,20 @@ func (r *PostgreRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `update events set title=$1, content=$2 where id=$3;`
+	query := `update events set title=$1, description=$2, location=$3, organizerName=$4, organizerEmail=$5, startTime=$6, endTime=$7  where id=$8;`
 
-	_, err := r.db.ExecContext(ctx, query, event.Title, event.Description, event.Id)
+	_, err := r.db.ExecContext(
+		ctx,
+		query,
+		event.Title,
+		event.Description,
+		event.Location,
+		event.OrganizerName,
+		event.OrganizerEmail,
+		event.StartTime,
+		event.EndTime,
+		event.Id,
+	)
 	if err != nil {
 		return models.Event{}, err
 	}

@@ -1,7 +1,7 @@
 package models
 
 type Event struct {
-	Id string `json:"__id,omitempty"`
+	Id string `json:"id,omitempty"`
 
 	Title string `json:"summary,omitempty" binding:"required"`
 

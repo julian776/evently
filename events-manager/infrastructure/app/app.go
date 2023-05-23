@@ -23,7 +23,10 @@ type App struct {
 	BrokerPublisher broker.BrokerPublisher
 
 	//------ UseCases-------
-	CreateEventUseCase *events.CreateEventUseCase
+	CreateEventUseCase     *events.CreateEventUseCase
+	GetEventByIdUseCase    *events.GetEventByIdUseCase
+	DeleteEventByIdUseCase *events.DeleteEventByIdUseCase
+	UpdateEventUseCase     *events.UpdateEventUseCase
 }
 
 func NewApp(
@@ -33,6 +36,9 @@ func NewApp(
 	appSettings AppSettings,
 	brokerPublisher broker.BrokerPublisher,
 	createEventUseCase *events.CreateEventUseCase,
+	getEventByIdUseCase *events.GetEventByIdUseCase,
+	deleteEventByIdUseCase *events.DeleteEventByIdUseCase,
+	updateEventUseCase *events.UpdateEventUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -41,6 +47,9 @@ func NewApp(
 		appSettings,
 		brokerPublisher,
 		createEventUseCase,
+		getEventByIdUseCase,
+		deleteEventByIdUseCase,
+		updateEventUseCase,
 	}
 }
 
