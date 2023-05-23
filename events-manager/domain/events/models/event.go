@@ -13,7 +13,7 @@ type Event struct {
 
 	Location string `json:"location,omitempty" binding:"required"`
 
-	StartTime string `json:"start_time,omitempty" binding:"required"`
+	StartTime string `json:"startTime,omitempty" binding:"required"`
 
-	EndTime string `json:"end_time,omitempty" binding:"required"`
+	EndTime string `json:"endTime,omitempty" binding:"required"`
 }

@@ -24,6 +24,7 @@ func createEvent(
 					"message": "can not create an event",
 				},
 			})
+			return
 		}
 		c.JSON(201, event)
 	}

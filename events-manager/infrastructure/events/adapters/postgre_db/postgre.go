@@ -6,6 +6,8 @@ import (
 	"events-manager/domain/events/models"
 	"events-manager/pkgs/logger"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
 
 type PostgreRepository struct {
@@ -13,6 +15,7 @@ type PostgreRepository struct {
 }
 
 func NewPostgreRepository(l logger.Logger, settings PostgreSettigs) *PostgreRepository {
+	fmt.Println(settings)
 	db, err := sql.Open("postgres", createConnToString(settings))
 	if err != nil {
 		l.Errorf("Error connecting to the DB: %s\n", err.Error())
@@ -65,15 +68,25 @@ func (r *PostgreRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `insert into events(title, content) values($1, $2);`
+	query := `insert into events(title, description, location, organizerName, organizerEmail, startTime, endTime) values($1, $2, $3, $4, $5, $6, $7);`
 
-	_, err := r.db.ExecContext(ctx, query, event.Title, event.Description)
+	_, err := r.db.ExecContext(
+		ctx,
+		query,
+		event.Title,
+		event.Description,
+		event.Location,
+		event.OrganizerName,
+		event.OrganizerEmail,
+		event.StartTime,
+		event.EndTime,
+	)
 
 	if err != nil {
 		return models.Event{}, err
 	}
 
-	return models.Event{}, nil
+	return event, nil
 }
 
 func (r *PostgreRepository) GetAllEventsByOrganizerEmail(
