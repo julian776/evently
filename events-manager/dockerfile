@@ -6,8 +6,8 @@ COPY ["go.mod", "go.sum", "./"]
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -o app
+RUN ["go", "build", "-C", "cmd/server", "-o", "app"]
 
 EXPOSE 8080
 
-CMD ["/app/app"]
+CMD ["go", "run", "/app/cmd/server"]

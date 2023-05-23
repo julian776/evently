@@ -3,21 +3,17 @@ package models
 type Event struct {
 	Id string `json:"__id,omitempty"`
 
-	Title string `json:"summary,omitempty"`
+	Title string `json:"summary,omitempty" binding:"required"`
 
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" binding:"required"`
 
-	UserId string `json:"userId,omitempty"`
+	OrganizerName string `json:"organizerName,omitempty" binding:"required"`
 
-	Location string `json:"location,omitempty"`
+	OrganizerEmail string `json:"organizerEmail,omitempty" binding:"required"`
 
-	StartTime string `json:"start_time,omitempty"`
+	Location string `json:"location,omitempty" binding:"required"`
 
-	EndTime string `json:"end_time,omitempty"`
+	StartTime string `json:"start_time,omitempty" binding:"required"`
 
-	Attendess []string `json:"attendess,omitempty"`
-
-	// Set reminders to a given event.
-	// Check valid reminders.
-	Reminders map[string]bool `json:"reminders,omitempty"`
+	EndTime string `json:"end_time,omitempty" binding:"required"`
 }

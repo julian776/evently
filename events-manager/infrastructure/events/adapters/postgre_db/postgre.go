@@ -9,11 +9,10 @@ import (
 )
 
 type PostgreRepository struct {
-	db     *sql.DB
-	logger logger.Logger
+	db *sql.DB
 }
 
-func NewPostgreRepository(l logger.Logger, settings *PostgreSettigs) *PostgreRepository {
+func NewPostgreRepository(l logger.Logger, settings PostgreSettigs) *PostgreRepository {
 	db, err := sql.Open("postgres", createConnToString(settings))
 	if err != nil {
 		l.Errorf("Error connecting to the DB: %s\n", err.Error())
@@ -27,7 +26,6 @@ func NewPostgreRepository(l logger.Logger, settings *PostgreSettigs) *PostgreRep
 
 	return &PostgreRepository{
 		db,
-		l,
 	}
 }
 
@@ -37,7 +35,7 @@ func (r *PostgreRepository) GetEventById(
 ) (models.Event, error) {
 	var article models.Event
 
-	query := `select title, content from posts where id=$1`
+	query := `select title, content from events where id=$1`
 	row, err := r.db.QueryContext(ctx, query, id)
 	if err != nil {
 		return article, err
@@ -67,7 +65,7 @@ func (r *PostgreRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `insert into posts(title, content) values($1, $2);`
+	query := `insert into events(title, content) values($1, $2);`
 
 	_, err := r.db.ExecContext(ctx, query, event.Title, event.Description)
 
@@ -78,11 +76,18 @@ func (r *PostgreRepository) CreateEvent(
 	return models.Event{}, nil
 }
 
-func (r *PostgreRepository) Update(
+func (r *PostgreRepository) GetAllEventsByOrganizerEmail(
+	ctx context.Context,
+	id string,
+) ([]models.Event, error) {
+	return []models.Event{}, nil
+}
+
+func (r *PostgreRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `update posts set title=$1, content=$2 where id=$3;`
+	query := `update events set title=$1, content=$2 where id=$3;`
 
 	_, err := r.db.ExecContext(ctx, query, event.Title, event.Description, event.Id)
 	if err != nil {
@@ -92,11 +97,11 @@ func (r *PostgreRepository) Update(
 	return models.Event{}, nil
 }
 
-func (r *PostgreRepository) Delete(
+func (r *PostgreRepository) DeleteEventById(
 	ctx context.Context,
 	id string,
 ) (models.Event, error) {
-	query := `delete from posts where id=$1;`
+	query := `delete from events where id=$1;`
 	_, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {
 		return models.Event{}, err
@@ -105,8 +110,7 @@ func (r *PostgreRepository) Delete(
 }
 
 // Take our connection struct and convert to a string for our db connection info
-func createConnToString(info *PostgreSettigs) string {
+func createConnToString(info PostgreSettigs) string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		info.Host, info.Port, info.User, info.Password, info.DBName)
-
 }

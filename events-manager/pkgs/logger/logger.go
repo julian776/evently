@@ -25,7 +25,7 @@ func NewLogger(settings Settings) *zap.SugaredLogger {
 }
 
 type Logger interface {
-	Debugf(template string, keysAndValues ...interface{})
+	Infof(template string, keysAndValues ...interface{})
 
 	Warnf(template string, keysAndValues ...interface{})
 

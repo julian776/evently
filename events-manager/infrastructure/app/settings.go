@@ -1,7 +1,7 @@
 package app
 
 import (
-	postgredb "events-manager/infrastructure/events/postgre_db"
+	postgredb "events-manager/infrastructure/events/adapters/postgre_db"
 	"events-manager/infrastructure/rabbit"
 	"events-manager/pkgs/logger"
 	"fmt"
@@ -32,6 +32,8 @@ type AppSettings struct {
 func LoadAppSettings() AppSettings {
 	dir, _ := os.Getwd()
 	fmt.Printf("Dir %s\n", dir)
+
+	fmt.Println("Env: ", os.Getenv("RABBIT_URL"))
 	if appSettings == nil {
 		settings := AppSettings{}
 		if err := envconfig.Process("", &settings); err != nil {

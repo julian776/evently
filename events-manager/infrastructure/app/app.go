@@ -2,33 +2,40 @@ package app
 
 import (
 	"context"
-	"events-manager/infrastructure/rabbit"
+	"events-manager/domain/broker"
+	events "events-manager/domain/events/usecases"
 	"events-manager/pkgs/logger"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
-	Logger logger.Logger
-	Server *gin.Engine
-	//Client   *http.Client
-	Settings     AppSettings
-	RabbitClient *rabbit.RabbitClient
+	Logger          logger.Logger
+	Server          *gin.Engine
+	Client          *http.Client
+	Settings        AppSettings
+	BrokerPublisher broker.BrokerPublisher
+
+	//------ UseCases-------
+	CreateEventUseCase *events.CreateEventUseCase
 }
 
 func NewApp(
 	logger logger.Logger,
 	server *gin.Engine,
-	//client *http.Client,
+	client *http.Client,
 	appSettings AppSettings,
-	rabbitClient *rabbit.RabbitClient,
+	brokerPublisher broker.BrokerPublisher,
+	createEventUseCase *events.CreateEventUseCase,
 ) *App {
 	return &App{
 		logger,
 		server,
-		//client,
+		client,
 		appSettings,
-		rabbitClient,
+		brokerPublisher,
+		createEventUseCase,
 	}
 }
 

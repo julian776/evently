@@ -7,7 +7,10 @@
 package main
 
 import (
+	"events-manager/domain/events/usecases"
 	"events-manager/infrastructure/app"
+	"events-manager/infrastructure/events/adapters/postgre_db"
+	http2 "events-manager/infrastructure/http/client"
 	"events-manager/infrastructure/http/server"
 	"events-manager/infrastructure/rabbit"
 	"events-manager/pkgs/logger"
@@ -20,8 +23,12 @@ func CreateApp() *app.App {
 	settings := app.GetLoggerSettings(appSettings)
 	sugaredLogger := logger.NewLogger(settings)
 	engine := http.NewServer()
+	client := http2.NewClient()
 	rabbitSettings := app.GetRabbitSettings(appSettings)
-	rabbitClient := rabbit.NewRabbitClient(sugaredLogger, rabbitSettings)
-	appApp := app.NewApp(sugaredLogger, engine, appSettings, rabbitClient)
+	rabbitPublisher := rabbit.NewRabbitPublisher(sugaredLogger, rabbitSettings)
+	postgreSettigs := app.GetPostgreSettings(appSettings)
+	postgreRepository := postgredb.NewPostgreRepository(sugaredLogger, postgreSettigs)
+	createEventUseCase := events.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
+	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase)
 	return appApp
 }
