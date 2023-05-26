@@ -1,0 +1,39 @@
+li {
+  all: unset;
+}
+
+.event-container{
+  display: flex;
+  flex-direction: row;
+  width: 68vw;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.grow-7 {
+  flex-grow: 7;
+}
+
+.text {
+  justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.buttons {
+  align-items: center;
+  justify-content: end;
+}
+
+.event-info {
+  background-color: rgb(207, 205, 205);
+  border-radius: 15px;
+  padding: 12px;
+  margin-right: 12px;
+}
