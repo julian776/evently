@@ -30,6 +30,23 @@ func createEvent(
 	}
 }
 
+func getAllEvents(
+	getAllEventsUseCase events.GetAllEventsUseCase,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		event, err := getAllEventsUseCase.Execute(c)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": gin.H{
+					"message": "can not retreive event",
+				},
+			})
+			return
+		}
+		c.JSON(200, event)
+	}
+}
+
 func getEventById(
 	getEventByIdUseCase events.GetEventByIdUseCase,
 ) gin.HandlerFunc {

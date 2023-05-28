@@ -3,7 +3,7 @@ package models
 type Event struct {
 	Id string `json:"id,omitempty"`
 
-	Title string `json:"summary,omitempty" binding:"required"`
+	Title string `json:"title,omitempty" binding:"required"`
 
 	Description string `json:"description,omitempty" binding:"required"`
 

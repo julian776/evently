@@ -77,6 +77,53 @@ func (r *PostgreRepository) GetEventById(
 	return event, nil
 }
 
+func (r *PostgreRepository) GetAllEvents(
+	ctx context.Context,
+) ([]models.Event, error) {
+	var events []models.Event
+
+	query := `select id, title, description, location, organizerName, organizerEmail, startTime, endTime from events`
+	row, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return []models.Event{}, err
+	}
+
+	defer row.Close()
+
+	for row.Next() {
+		var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
+
+		err := row.Scan(
+			&id,
+			&title,
+			&description,
+			&location,
+			&organizerName,
+			&organizerEmail,
+			&startTime,
+			&endTime,
+		)
+		if err != nil {
+			return []models.Event{}, err
+		}
+
+		events = append(
+			events,
+			models.Event{
+				Id:             id,
+				Title:          title,
+				Description:    description,
+				Location:       location,
+				OrganizerName:  organizerName,
+				OrganizerEmail: organizerEmail,
+				StartTime:      startTime,
+				EndTime:        endTime,
+			})
+	}
+
+	return events, nil
+}
+
 func (r *PostgreRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,

@@ -87,6 +87,7 @@ func (c *RabbitPublisher) PublishMessageWithContext(
 	return err
 }
 
+// Never used (Practicing) TODO: Delete
 func (c *RabbitPublisher) ListenMessages(
 	ctx context.Context,
 	queueName string,

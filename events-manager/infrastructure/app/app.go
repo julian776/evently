@@ -4,6 +4,7 @@ import (
 	"context"
 	"events-manager/domain/broker"
 	events "events-manager/domain/events/usecases"
+	eventsLoader "events-manager/infrastructure/events"
 	"events-manager/pkgs/logger"
 	"log"
 	"net/http"
@@ -27,6 +28,7 @@ type App struct {
 	GetEventByIdUseCase    *events.GetEventByIdUseCase
 	DeleteEventByIdUseCase *events.DeleteEventByIdUseCase
 	UpdateEventUseCase     *events.UpdateEventUseCase
+	GetAllEventsUseCase    *events.GetAllEventsUseCase
 }
 
 func NewApp(
@@ -39,6 +41,7 @@ func NewApp(
 	getEventByIdUseCase *events.GetEventByIdUseCase,
 	deleteEventByIdUseCase *events.DeleteEventByIdUseCase,
 	updateEventUseCase *events.UpdateEventUseCase,
+	getAllEventsUseCase *events.GetAllEventsUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -50,6 +53,7 @@ func NewApp(
 		getEventByIdUseCase,
 		deleteEventByIdUseCase,
 		updateEventUseCase,
+		getAllEventsUseCase,
 	}
 }
 
@@ -58,6 +62,8 @@ func (a *App) Run() error {
 		Addr:    ":8080",
 		Handler: a.Server,
 	}
+
+	eventsLoader.LoadEventsService(a.BrokerPublisher, *a.Settings.EventsSettings)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

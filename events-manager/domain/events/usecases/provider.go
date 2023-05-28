@@ -9,4 +9,5 @@ var UseCasesProvider = wire.NewSet(
 	NewGetEventByIdUseCase,
 	NewDeleteEventByIdUseCase,
 	NewUpdateEventUseCase,
+	NewGetAllEventsUseCase,
 )
