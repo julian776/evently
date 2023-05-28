@@ -28,12 +28,6 @@ services:
     environment:
       POSTGRES_PASSWORD: 1234
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 9650:8080
-
   mongo:
     image: mongo
     ports:
@@ -47,7 +41,7 @@ services:
     volumes:
       - ./front:/app
     ports:
-      - 3000:3000
+      - 4200:4200
   
   rabbit:
     build: ./configs/rabbit

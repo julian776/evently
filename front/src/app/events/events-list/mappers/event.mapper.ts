@@ -1,4 +1,4 @@
-import { Event } from "../models/event";
+import { Event } from "../../models/event";
 
 export const eventMapper = (event: Event): Event => {
   const eventFormatted: Event = {

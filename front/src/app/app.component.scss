@@ -109,6 +109,15 @@
     background-color: #205991;
   }
 
+  .card.card-medium {
+    height: 100%;
+    width: 80px;
+  }
+  .card-medium {
+    color: white;
+    background-color: #205991;
+  }
+
   .card-container .card:not(.highlight-card) {
     cursor: pointer;
   }

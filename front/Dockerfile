@@ -9,9 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run ng serve
-# Stage 2
-# FROM nginx:alpine
+EXPOSE 4200
 
-# COPY --from=node ./dist/angular-app /usr/share/nginx/html
+CMD [ "npm", "run", "ng", "serve"]
 

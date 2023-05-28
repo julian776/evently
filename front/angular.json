@@ -72,7 +72,8 @@
               "browserTarget": "front:build:production"
             },
             "development": {
-              "browserTarget": "front:build:development"
+              "browserTarget": "front:build:development",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"

@@ -5,11 +5,13 @@ export type Event = {
 
   description: string;
 
+  location: string;
+
+  cost: number;
+
   organizerName: string;
 
   organizerEmail: string;
-
-  location: string;
 
   startTime: string;
 
