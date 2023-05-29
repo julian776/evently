@@ -6,6 +6,8 @@ services:
       - 8080:8080
     env_file:
       - ./events-manager/.env
+    volumes:
+      - ./events-manager:/app
     depends_on:
       rabbit:
         condition: service_healthy

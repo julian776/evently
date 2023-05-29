@@ -2,12 +2,14 @@ FROM golang:alpine
 
 WORKDIR /app
 
+RUN go install github.com/cosmtrek/air@latest
+
 COPY ["go.mod", "go.sum", "./"]
 RUN go mod download && go mod verify
 
 COPY . .
-RUN ["go", "build", "-C", "cmd/server", "-o", "app"]
 
 EXPOSE 8080
 
-CMD ["go", "run", "/app/cmd/server"]
+CMD ["air", "-c", ".air.toml"]
+#CMD ["go", "run", "/app/cmd/server"]

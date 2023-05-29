@@ -83,12 +83,16 @@ func (a *App) Run() error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	if err := server.Shutdown(ctx); err != nil {
 		a.Logger.Fatalf("Server Shutdown: %s", err.Error())
 	}
 	// catching ctx.Done(). timeout of 5 seconds.
 	<-ctx.Done()
-	log.Println("timeout of 5 seconds.")
+	log.Println("timeout of 5 seconds. Closing broker connection")
+
+	// Close rabbit connection
+	a.BrokerPublisher.Stop()
 
 	log.Println("Server exiting")
 

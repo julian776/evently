@@ -38,7 +38,17 @@ func (r *PostgreRepository) GetEventById(
 ) (models.Event, error) {
 	var event models.Event
 
-	query := `select title, description, location, organizerName, organizerEmail, startTime, endTime from events where id=$1`
+	query := `select
+title,
+description,
+cost,
+location,
+attendees,
+organizerName,
+organizerEmail,
+startTime,
+endTime FROM events WHERE id=$1`
+
 	row, err := r.db.QueryContext(ctx, query, id)
 	if err != nil {
 		return event, err
@@ -47,12 +57,14 @@ func (r *PostgreRepository) GetEventById(
 	defer row.Close()
 
 	if row.Next() {
-		var title, description, location, organizerName, organizerEmail, startTime, endTime string
-
+		var title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
+		var attendees []string
 		err := row.Scan(
 			&title,
 			&description,
+			&cost,
 			&location,
+			&attendees,
 			&organizerName,
 			&organizerEmail,
 			&startTime,
