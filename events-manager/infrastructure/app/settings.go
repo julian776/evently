@@ -1,12 +1,12 @@
 package app
 
 import (
+	configs "events-manager/infrastructure/configs/postgres"
 	"events-manager/infrastructure/events"
-	postgredb "events-manager/infrastructure/events/adapters/postgre_db"
 	"events-manager/infrastructure/rabbit"
+	"events-manager/infrastructure/users"
 	"events-manager/pkgs/logger"
 	"fmt"
-	"os"
 
 	"github.com/google/wire"
 	"github.com/kelseyhightower/envconfig"
@@ -18,7 +18,8 @@ var SettingsProvider = wire.NewSet(
 	GetLoggerSettings,
 	GetPostgreSettings,
 	GetRabbitSettings,
-	GetEventSettings,
+	GetEventsSettings,
+	GetUsersSettings,
 )
 
 var appSettings *AppSettings
@@ -26,17 +27,14 @@ var appSettings *AppSettings
 type AppSettings struct {
 	Logger         *logger.Settings
 	Rabbit         *rabbit.Settings
-	PostgreSettigs *postgredb.PostgreSettigs
+	PostgreSettigs *configs.PostgreSettigs
 	EventsSettings *events.EventsSettings
+	UsersSettings  *users.UsersSettings
 	Port           uint64 `envconfig:"PORT" required:"true"`
 	ApiKey         string `envconfig:"API_KEY" default:""`
 }
 
 func LoadAppSettings() AppSettings {
-	dir, _ := os.Getwd()
-	fmt.Printf("Dir %s\n", dir)
-
-	fmt.Println("Env: ", os.Getenv("RABBIT_URL"))
 	if appSettings == nil {
 		settings := AppSettings{}
 		if err := envconfig.Process("", &settings); err != nil {
@@ -57,12 +55,16 @@ func GetRabbitSettings(settings AppSettings) rabbit.Settings {
 	return *settings.Rabbit
 }
 
-func GetPostgreSettings(settings AppSettings) postgredb.PostgreSettigs {
+func GetPostgreSettings(settings AppSettings) configs.PostgreSettigs {
 	return *settings.PostgreSettigs
 }
 
-func GetEventSettings(settings AppSettings) events.EventsSettings {
+func GetEventsSettings(settings AppSettings) events.EventsSettings {
 	return *settings.EventsSettings
+}
+
+func GetUsersSettings(settings AppSettings) users.UsersSettings {
+	return *settings.UsersSettings
 }
 
 func loadConfigFile() (AppSettings, error) {

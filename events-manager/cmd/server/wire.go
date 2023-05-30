@@ -7,11 +7,14 @@ import (
 	"events-manager/domain/broker"
 	"events-manager/domain/events/repositories"
 	events "events-manager/domain/events/usecases"
+	usersRepo "events-manager/domain/users/repositories"
+	users "events-manager/domain/users/usecases"
 	"events-manager/infrastructure/app"
-	postgredb "events-manager/infrastructure/events/adapters/postgre_db"
+	eventspostgredb "events-manager/infrastructure/events/adapters/postgre_db"
 	client "events-manager/infrastructure/http/client"
 	server "events-manager/infrastructure/http/server"
 	"events-manager/infrastructure/rabbit"
+	userspostgredb "events-manager/infrastructure/users/adapters/postgre_db"
 	"events-manager/pkgs/logger"
 
 	"github.com/google/wire"
@@ -22,8 +25,11 @@ func CreateApp() *app.App {
 	wire.Build(
 		app.SettingsProvider,
 		events.UseCasesProvider,
-		postgredb.NewPostgreRepository,
-		wire.Bind(new(repositories.EventsRepository), new(*postgredb.PostgreRepository)),
+		users.UseCasesProvider,
+		eventspostgredb.NewPostgreEventsRepository,
+		wire.Bind(new(repositories.EventsRepository), new(*eventspostgredb.PostgreEventsRepository)),
+		userspostgredb.NewPostgreUsersRepository,
+		wire.Bind(new(usersRepo.UsersRepository), new(*userspostgredb.PostgreUsersRepository)),
 		logger.NewLogger,
 		wire.Bind(new(logger.Logger), new(*zap.SugaredLogger)),
 		server.NewServer,

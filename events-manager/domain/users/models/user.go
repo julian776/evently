@@ -1,9 +1,11 @@
 package models
 
 type User struct {
-	Id string `json:"__id,omitempty"`
+	Email string `json:"email,omitempty" binding:"required"`
 
-	Email string `json:"summary,omitempty"`
+	Name string `json:"name,omitempty" binding:"required"`
 
-	Password string `json:"description,omitempty"`
+	Password string `json:"description,omitempty" binding:"required"`
+
+	PurpouseOfUse string `json:"purpouseOfUse,omitempty" binding:"required"`
 }

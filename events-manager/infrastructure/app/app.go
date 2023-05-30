@@ -4,6 +4,7 @@ import (
 	"context"
 	"events-manager/domain/broker"
 	events "events-manager/domain/events/usecases"
+	users "events-manager/domain/users/usecases"
 	eventsLoader "events-manager/infrastructure/events"
 	"events-manager/pkgs/logger"
 	"log"
@@ -29,6 +30,9 @@ type App struct {
 	DeleteEventByIdUseCase *events.DeleteEventByIdUseCase
 	UpdateEventUseCase     *events.UpdateEventUseCase
 	GetAllEventsUseCase    *events.GetAllEventsUseCase
+	CreateUserUseCase      *users.CreateUserUseCase
+	//------ End UseCases-------
+
 }
 
 func NewApp(
@@ -42,6 +46,7 @@ func NewApp(
 	deleteEventByIdUseCase *events.DeleteEventByIdUseCase,
 	updateEventUseCase *events.UpdateEventUseCase,
 	getAllEventsUseCase *events.GetAllEventsUseCase,
+	createUserUseCase *users.CreateUserUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -54,6 +59,7 @@ func NewApp(
 		deleteEventByIdUseCase,
 		updateEventUseCase,
 		getAllEventsUseCase,
+		createUserUseCase,
 	}
 }
 

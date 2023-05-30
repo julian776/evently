@@ -1,14 +1,13 @@
-package events
+package repositories
 
 import (
 	"context"
-	"events-manager/domain/events/models"
+	"events-manager/domain/users/models"
 )
 
 type UsersRepository interface {
-	GetUser(ctx context.Context, id string) (models.Event, error)
-	GetAllEventsById(ctx context.Context, id string) ([]models.Event, error)
-	CreateUser(ctx context.Context, event models.Event) (models.Event, error)
-	UpdateUser(ctx context.Context, event models.Event) (models.Event, error)
-	DeleteUser(ctx context.Context, id string) (bool, error)
+	GetUserById(ctx context.Context, id string) (models.User, error)
+	CreateUser(ctx context.Context, user models.User) (models.User, error)
+	UpdateUser(ctx context.Context, user models.User) (models.User, error)
+	DeleteUserById(ctx context.Context, id string) error
 }

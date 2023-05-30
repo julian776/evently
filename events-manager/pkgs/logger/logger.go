@@ -25,13 +25,13 @@ func NewLogger(settings Settings) *zap.SugaredLogger {
 }
 
 type Logger interface {
-	Infof(template string, keysAndValues ...interface{})
+	Infof(template string, args ...interface{})
 
-	Warnf(template string, keysAndValues ...interface{})
+	Warnf(template string, args ...interface{})
 
-	Errorf(template string, keysAndValues ...interface{})
+	Errorf(template string, args ...interface{})
 
-	Fatalf(template string, keysAndValues ...interface{})
+	Fatalf(template string, args ...interface{})
 
 	// Sync flushes any buffered log entries.
 	Sync() error

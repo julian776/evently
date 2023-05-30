@@ -8,11 +8,13 @@ package main
 
 import (
 	"events-manager/domain/events/usecases"
+	"events-manager/domain/users/usecases"
 	"events-manager/infrastructure/app"
 	"events-manager/infrastructure/events/adapters/postgre_db"
 	http2 "events-manager/infrastructure/http/client"
 	"events-manager/infrastructure/http/server"
 	"events-manager/infrastructure/rabbit"
+	postgredb2 "events-manager/infrastructure/users/adapters/postgre_db"
 	"events-manager/pkgs/logger"
 )
 
@@ -27,13 +29,16 @@ func CreateApp() *app.App {
 	rabbitSettings := app.GetRabbitSettings(appSettings)
 	rabbitPublisher := rabbit.NewRabbitPublisher(sugaredLogger, rabbitSettings)
 	postgreSettigs := app.GetPostgreSettings(appSettings)
-	postgreRepository := postgredb.NewPostgreRepository(sugaredLogger, postgreSettigs)
-	eventsSettings := app.GetEventSettings(appSettings)
-	createEventUseCase := events.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreRepository, eventsSettings)
-	getEventByIdUseCase := events.NewGetEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
-	deleteEventByIdUseCase := events.NewDeleteEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreRepository, eventsSettings)
-	updateEventUseCase := events.NewUpdateEventUseCase(sugaredLogger, rabbitPublisher, postgreRepository, eventsSettings)
-	getAllEventsUseCase := events.NewGetAllEventsUseCase(sugaredLogger, rabbitPublisher, postgreRepository)
-	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase, getEventByIdUseCase, deleteEventByIdUseCase, updateEventUseCase, getAllEventsUseCase)
+	postgreEventsRepository := postgredb.NewPostgreEventsRepository(sugaredLogger, postgreSettigs)
+	eventsSettings := app.GetEventsSettings(appSettings)
+	createEventUseCase := events.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
+	getEventByIdUseCase := events.NewGetEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository)
+	deleteEventByIdUseCase := events.NewDeleteEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
+	updateEventUseCase := events.NewUpdateEventUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
+	getAllEventsUseCase := events.NewGetAllEventsUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository)
+	postgreUsersRepository := postgredb2.NewPostgreUsersRepository(sugaredLogger, postgreSettigs)
+	usersSettings := app.GetUsersSettings(appSettings)
+	createUserUseCase := users.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreUsersRepository, usersSettings)
+	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase, getEventByIdUseCase, deleteEventByIdUseCase, updateEventUseCase, getAllEventsUseCase, createUserUseCase)
 	return appApp
 }
