@@ -33,19 +33,19 @@ func NewPostgreUsersRepository(l logger.Logger, settings configs.PostgreSettigs)
 	}
 }
 
-func (r *PostgreUsersRepository) GetUserById(
+func (r *PostgreUsersRepository) GetUserByEmail(
 	ctx context.Context,
-	id string,
+	email string,
 ) (models.User, error) {
 	var user models.User
 
 	query := `select
-name,
 email,
+name,
 password,
-purpouseOfUse FROM users WHERE id=$1`
+purpouseOfUse FROM users WHERE email=$1`
 
-	row, err := r.db.QueryContext(ctx, query, id)
+	row, err := r.db.QueryContext(ctx, query, email)
 	if err != nil {
 		return user, err
 	}
@@ -55,8 +55,8 @@ purpouseOfUse FROM users WHERE id=$1`
 	if row.Next() {
 		var name, email, password, purpouseOfUse string
 		err := row.Scan(
-			&name,
 			&email,
+			&name,
 			&password,
 			&purpouseOfUse,
 		)
@@ -135,18 +135,6 @@ purpouseOfUse=$4 where id=$8;`
 	}
 
 	return models.User{}, nil
-}
-
-func (r *PostgreUsersRepository) DeleteUserById(
-	ctx context.Context,
-	id string,
-) error {
-	query := `delete from users where id=$1;`
-	_, err := r.db.ExecContext(ctx, query, id)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // Take our connection struct and convert to a string for our db connection info

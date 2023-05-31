@@ -7,7 +7,7 @@ import (
 	"events-manager/infrastructure/http/handlers/users"
 )
 
-func SetRoutes(a *app.App) {
+func SetRoutes(a app.App) {
 	health.RegisterRoutes(a)
 	events.RegisterRoutes(a)
 	users.RegisterRoutes(a)

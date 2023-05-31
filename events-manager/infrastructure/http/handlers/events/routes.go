@@ -2,7 +2,7 @@ package events
 
 import "events-manager/infrastructure/app"
 
-func RegisterRoutes(a *app.App) {
+func RegisterRoutes(a app.App) {
 	r := a.Server.Group("/events")
 
 	r.POST("", createEvent(*a.CreateEventUseCase))

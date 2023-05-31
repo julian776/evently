@@ -31,6 +31,7 @@ type App struct {
 	UpdateEventUseCase     *events.UpdateEventUseCase
 	GetAllEventsUseCase    *events.GetAllEventsUseCase
 	CreateUserUseCase      *users.CreateUserUseCase
+	GetUserByEmailUseCase  *users.GetUserByEmailUseCase
 	//------ End UseCases-------
 
 }
@@ -47,6 +48,7 @@ func NewApp(
 	updateEventUseCase *events.UpdateEventUseCase,
 	getAllEventsUseCase *events.GetAllEventsUseCase,
 	createUserUseCase *users.CreateUserUseCase,
+	getUserByEmailUseCase *users.GetUserByEmailUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -60,6 +62,7 @@ func NewApp(
 		updateEventUseCase,
 		getAllEventsUseCase,
 		createUserUseCase,
+		getUserByEmailUseCase,
 	}
 }
 
@@ -77,12 +80,8 @@ func (a *App) Run() error {
 		}
 	}()
 
-	// Wait for interrupt signal to gracefully shutdown the server with
-	// a timeout of 5 seconds.
-	quit := make(chan os.Signal)
-	// kill (no param) default send syscanll.SIGTERM
-	// kill -2 is syscall.SIGINT
-	// kill -9 is syscall. SIGKILL but can"t be catch, so don't need add it
+	quit := make(chan os.Signal, 1)
+
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	a.Logger.Infof("Shutdown Server ...")

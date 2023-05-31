@@ -8,6 +8,7 @@ import (
 	"events-manager/pkgs/logger"
 	"fmt"
 
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -141,15 +142,27 @@ func (r *PostgreEventsRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `insert into events(title, description, location, organizerName, organizerEmail, startTime, endTime) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;`
+	query := `insert into events(
+title,
+description,
+cost,
+location,
+attendees,
+organizerName,
+organizerEmail,
+startTime,
+endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
 
-	var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
+	var id, title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
+	var attendees []string
 	err := r.db.QueryRowContext(
 		ctx,
 		query,
 		event.Title,
 		event.Description,
+		event.Cost,
 		event.Location,
+		pq.Array(event.Attendees),
 		event.OrganizerName,
 		event.OrganizerEmail,
 		event.StartTime,
@@ -158,7 +171,9 @@ func (r *PostgreEventsRepository) CreateEvent(
 		&id,
 		&title,
 		&description,
+		&cost,
 		&location,
+		pq.Array(&attendees),
 		&organizerName,
 		&organizerEmail,
 		&startTime,
@@ -169,7 +184,9 @@ func (r *PostgreEventsRepository) CreateEvent(
 		Id:             id,
 		Title:          title,
 		Description:    description,
+		Cost:           cost,
 		Location:       location,
+		Attendees:      attendees,
 		OrganizerName:  organizerName,
 		OrganizerEmail: organizerEmail,
 		StartTime:      startTime,
