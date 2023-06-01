@@ -59,14 +59,14 @@ endTime FROM events WHERE id=$1`
 	defer row.Close()
 
 	if row.Next() {
-		var title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
+		var id, title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
 		var attendees []string
 		err := row.Scan(
 			&title,
 			&description,
 			&cost,
 			&location,
-			&attendees,
+			pq.Array(&attendees),
 			&organizerName,
 			&organizerEmail,
 			&startTime,
@@ -96,7 +96,7 @@ func (r *PostgreEventsRepository) GetAllEvents(
 ) ([]models.Event, error) {
 	var events []models.Event
 
-	query := `select id, title, description, location, organizerName, organizerEmail, startTime, endTime from events`
+	query := `select id, title, description, cost, location, attendees, organizerName, organizerEmail, startTime, endTime from events`
 	row, err := r.db.QueryContext(ctx, query)
 	if err != nil {
 		return []models.Event{}, err
@@ -106,12 +106,15 @@ func (r *PostgreEventsRepository) GetAllEvents(
 
 	for row.Next() {
 		var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
-
+		var attendees []string
+		var cost float32
 		err := row.Scan(
 			&id,
 			&title,
 			&description,
+			&cost,
 			&location,
+			pq.Array(&attendees),
 			&organizerName,
 			&organizerEmail,
 			&startTime,
@@ -121,18 +124,18 @@ func (r *PostgreEventsRepository) GetAllEvents(
 			return []models.Event{}, err
 		}
 
-		events = append(
-			events,
-			models.Event{
-				Id:             id,
-				Title:          title,
-				Description:    description,
-				Location:       location,
-				OrganizerName:  organizerName,
-				OrganizerEmail: organizerEmail,
-				StartTime:      startTime,
-				EndTime:        endTime,
-			})
+		events = append(events, models.Event{
+			Id:             id,
+			Title:          title,
+			Description:    description,
+			Cost:           cost,
+			Location:       location,
+			Attendees:      attendees,
+			OrganizerName:  organizerName,
+			OrganizerEmail: organizerEmail,
+			StartTime:      startTime,
+			EndTime:        endTime,
+		})
 	}
 
 	return events, nil
@@ -153,8 +156,9 @@ organizerEmail,
 startTime,
 endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
 
-	var id, title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
+	var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
 	var attendees []string
+	var cost float32
 	err := r.db.QueryRowContext(
 		ctx,
 		query,
@@ -198,6 +202,32 @@ endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
 	}
 
 	return eventCreated, nil
+}
+
+func (r *PostgreEventsRepository) AddAttendeToEventById(
+	ctx context.Context,
+	id string,
+	attendeeEmail string,
+) ([]string, error) {
+	query := `UPDATE events SET
+attendees = array_append(attendees, $2)
+WHERE id=$1 RETURNING attendees;`
+
+	var attendees []string
+	err := r.db.QueryRowContext(
+		ctx,
+		query,
+		id,
+		attendeeEmail,
+	).Scan(
+		pq.Array(&attendees),
+	)
+
+	if err != nil {
+		return []string{}, err
+	}
+
+	return attendees, nil
 }
 
 func (r *PostgreEventsRepository) GetAllEventsByOrganizerEmail(

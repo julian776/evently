@@ -36,10 +36,11 @@ func CreateApp() *app.App {
 	deleteEventByIdUseCase := events.NewDeleteEventByIdUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
 	updateEventUseCase := events.NewUpdateEventUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
 	getAllEventsUseCase := events.NewGetAllEventsUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository)
+	addAttendeeEventUseCase := events.NewAddAttendeeEventUseCase(sugaredLogger, rabbitPublisher, postgreEventsRepository, eventsSettings)
 	postgreUsersRepository := postgredb2.NewPostgreUsersRepository(sugaredLogger, postgreSettigs)
 	usersSettings := app.GetUsersSettings(appSettings)
 	createUserUseCase := users.NewCreateEventUseCase(sugaredLogger, rabbitPublisher, postgreUsersRepository, usersSettings)
 	getUserByEmailUseCase := users.NewGetUserByEmailUseCase(sugaredLogger, rabbitPublisher, postgreUsersRepository, usersSettings)
-	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase, getEventByIdUseCase, deleteEventByIdUseCase, updateEventUseCase, getAllEventsUseCase, createUserUseCase, getUserByEmailUseCase)
+	appApp := app.NewApp(sugaredLogger, engine, client, appSettings, rabbitPublisher, createEventUseCase, getEventByIdUseCase, deleteEventByIdUseCase, updateEventUseCase, getAllEventsUseCase, addAttendeeEventUseCase, createUserUseCase, getUserByEmailUseCase)
 	return appApp
 }

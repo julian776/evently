@@ -25,13 +25,14 @@ type App struct {
 	BrokerPublisher broker.BrokerPublisher
 
 	//------ UseCases-------
-	CreateEventUseCase     *events.CreateEventUseCase
-	GetEventByIdUseCase    *events.GetEventByIdUseCase
-	DeleteEventByIdUseCase *events.DeleteEventByIdUseCase
-	UpdateEventUseCase     *events.UpdateEventUseCase
-	GetAllEventsUseCase    *events.GetAllEventsUseCase
-	CreateUserUseCase      *users.CreateUserUseCase
-	GetUserByEmailUseCase  *users.GetUserByEmailUseCase
+	CreateEventUseCase      *events.CreateEventUseCase
+	GetEventByIdUseCase     *events.GetEventByIdUseCase
+	DeleteEventByIdUseCase  *events.DeleteEventByIdUseCase
+	UpdateEventUseCase      *events.UpdateEventUseCase
+	GetAllEventsUseCase     *events.GetAllEventsUseCase
+	CreateUserUseCase       *users.CreateUserUseCase
+	GetUserByEmailUseCase   *users.GetUserByEmailUseCase
+	AddAttendeeEventUseCase *events.AddAttendeeEventUseCase
 	//------ End UseCases-------
 
 }
@@ -47,6 +48,7 @@ func NewApp(
 	deleteEventByIdUseCase *events.DeleteEventByIdUseCase,
 	updateEventUseCase *events.UpdateEventUseCase,
 	getAllEventsUseCase *events.GetAllEventsUseCase,
+	addAttendeeEventUseCase *events.AddAttendeeEventUseCase,
 	createUserUseCase *users.CreateUserUseCase,
 	getUserByEmailUseCase *users.GetUserByEmailUseCase,
 ) *App {
@@ -63,6 +65,7 @@ func NewApp(
 		getAllEventsUseCase,
 		createUserUseCase,
 		getUserByEmailUseCase,
+		addAttendeeEventUseCase,
 	}
 }
 

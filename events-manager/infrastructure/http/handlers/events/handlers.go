@@ -1,6 +1,7 @@
 package events
 
 import (
+	"events-manager/domain/events/dtos"
 	"events-manager/domain/events/models"
 	events "events-manager/domain/events/usecases"
 	"net/http"
@@ -99,6 +100,28 @@ func updateEvent(
 			})
 			return
 		}
-		c.JSON(201, event)
+		c.JSON(200, event)
+	}
+}
+
+func addAttendeeEvent(
+	addAttendeeEventUseCase events.AddAttendeeEventUseCase,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var json dtos.AddAttendeDTO
+		if err := c.ShouldBindJSON(&json); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		event, err := addAttendeeEventUseCase.Execute(c, json)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": gin.H{
+					"message": "can not create an event",
+				},
+			})
+			return
+		}
+		c.JSON(200, event)
 	}
 }

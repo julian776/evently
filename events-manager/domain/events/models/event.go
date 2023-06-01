@@ -7,7 +7,7 @@ type Event struct {
 
 	Description string `json:"description,omitempty" binding:"required"`
 
-	Cost string `json:"cost,omitempty" binding:"required"`
+	Cost float32 `json:"cost,omitempty" binding:"gte=0"`
 
 	Location string `json:"location,omitempty" binding:"required"`
 
