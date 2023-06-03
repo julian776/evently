@@ -11,6 +11,12 @@ import { FooterComponent } from './footer/footer.component';
 import { EventsComponent } from './events/events-list/events.component';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {ScrollingModule} from '@angular/cdk/scrolling'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +32,12 @@ import { reducers, metaReducers } from './reducers';
     ReactiveFormsModule,
     StoreModule.forRoot(reducers, {
       metaReducers
-    })
+    }),
+    MatDatepickerModule,
+    MatNativeDateModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    ScrollingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

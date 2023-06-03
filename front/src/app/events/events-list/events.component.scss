@@ -6,10 +6,23 @@ li {
   font-size: 150%;
 }
 
+.events-viewport {
+  height: 60vh;
+  width: 72.5vw;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  //border: 1px solid black;
+}
+
+.example-item {
+  height: 50px;
+}
+
 .event-container{
   display: flex;
   flex-direction: row;
-  width: 68vw;
+  min-width: 100%;
 }
 
 .text-container {

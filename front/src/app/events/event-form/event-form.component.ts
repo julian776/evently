@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Event } from '../models/event';
 import { Store } from '@ngrx/store';
 import { EventsState } from 'src/app/reducers/events/events.reducer';
 import { addEvent } from 'src/app/reducers/events/events.actions';
+
+
 
 @Component({
   selector: 'app-event-form',
@@ -28,8 +30,8 @@ export class EventFormComponent {
       cost: ['', Validators.required],
       organizerName: ['', Validators.required],
       organizerEmail: ['', [Validators.required, Validators.email]],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
+      startTime: [new Date(), [Validators.required]],
+      endTime: [new Date(), [Validators.required]],
     });
   }
 
@@ -44,6 +46,5 @@ export class EventFormComponent {
         console.log(event);
         this.store.dispatch(addEvent({ event }));
       });
-    console.log(this.eventForm.value);
   }
 }

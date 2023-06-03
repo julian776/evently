@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/reducers';
-import { delEvent, loadEvents } from 'src/app/reducers/events/events.actions';
+import { loadEvents } from 'src/app/reducers/events/events.actions';
 import { Observable, map } from 'rxjs';
 import { selectEventsList } from 'src/app/reducers/events/selectors/event-list.selector';
 
@@ -21,12 +21,12 @@ export class EventsComponent {
 
   constructor(
     private router: Router,
-    private client: HttpClient,
+    private http: HttpClient,
     private store: Store<State>
   ) {}
 
   ngOnInit() {
-    this.client
+    this.http
       .get<Event[]>(`http://0.0.0.0:8080/events`, { observe: 'body' })
       .subscribe((val: Event[]) => {
         this.store.dispatch(loadEvents({ events: val }));
@@ -34,20 +34,7 @@ export class EventsComponent {
   }
 
   handleIndividualView(eventId: string) {
-    //this.router.navigate([`/event/${eventId}`]).catch(console.error);
+    this.router.navigate([`/event/${eventId}`]).catch(console.error);
     console.log('Edit' + eventId);
-  }
-
-  handleEdit(eventId: string) {
-    this.router.navigate([`/event/edit/${eventId}`]).catch(console.error);
-    console.log('Edit' + eventId);
-  }
-
-  handleDelete(eventId: string) {
-    this.client
-      .delete<Event[]>(`http://0.0.0.0:8080/events/${eventId}`)
-      .subscribe(() => {
-        this.store.dispatch(delEvent({ id: eventId }));
-      });
   }
 }
