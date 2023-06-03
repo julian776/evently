@@ -9,6 +9,8 @@ import { EventFormComponent } from './events/event-form/event-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './footer/footer.component';
 import { EventsComponent } from './events/events-list/events.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +23,10 @@ import { EventsComponent } from './events/events-list/events.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

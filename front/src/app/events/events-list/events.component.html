@@ -11,7 +11,7 @@
 
 <div class="card-container">
 <ul>
-  <li class="card" *ngFor="let event of events">
+  <li class="card" *ngFor="let event of (events$ | async)">
       <div (click)="handleIndividualView(event.id)" class="event-container">
         <div class="text-container grow-7">
           <div class="row text grow-7">

@@ -17,7 +17,7 @@ export class IndividualEventComponent {
     const id = this.route.snapshot.paramMap.get('id');
 
     this.http
-      .get<Event>(`http://127.0.0.1:8080/events/${id}`, { observe: 'body' })
+      .get<Event>(`http://0.0.0.0:8080/events/${id}`, { observe: 'body' })
       .subscribe((val: Event) => {
         this.event = val;
 
