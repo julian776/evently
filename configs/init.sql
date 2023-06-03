@@ -1,7 +1,9 @@
 create table users (
   email text not null unique,
   primary key(email),
-  name text
+  name text,
+  password text not null,
+  purpouseOfUse text not null
 );
 
 create table events (
@@ -9,12 +11,12 @@ create table events (
   primary key(id),
   title text,
   description text,
-  cost integer,
+  cost real,
 	location text,
+  attendees text[],
   organizerName text,
 	organizerEmail text,
   foreign key(organizerEmail) REFERENCES users(email),
-  attendees text[],
 	startTime text,
 	endTime text
 );
