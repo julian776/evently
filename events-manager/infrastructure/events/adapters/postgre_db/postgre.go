@@ -41,6 +41,7 @@ func (r *PostgreEventsRepository) GetEventById(
 	var event models.Event
 
 	query := `select
+id,
 title,
 description,
 cost,
@@ -63,6 +64,7 @@ endTime FROM events WHERE id=$1`
 		var attendees []string
 		var cost float32
 		err := row.Scan(
+			&id,
 			&title,
 			&description,
 			&cost,
