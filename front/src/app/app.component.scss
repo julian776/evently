@@ -96,6 +96,25 @@
     line-height: 24px;
   }
 
+  #new-event-icon {
+    border-radius: 25px;
+    border: 5px #125699 solid;
+  }
+
+  .right {
+    position: fixed;
+    right: 0;
+    margin-right: 15px;
+    span {
+      display: none;
+      font-size: medium;
+      color: #125699;
+    }
+    &:hover span {
+      display: block;
+    }
+  }
+
   .card-container .card:not(:last-child) {
     margin-right: 0;
   }

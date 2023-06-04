@@ -9,7 +9,7 @@ import { delEvent } from 'src/app/reducers/events/events.actions';
 @Component({
   selector: 'app-individual-event',
   templateUrl: './individual-event.component.html',
-  styleUrls: ['./individual-event.component.scss'],
+  styleUrls: ['./individual-event.component.scss', '../../app.component.scss'],
 })
 export class IndividualEventComponent {
   public event!: Event;
@@ -38,6 +38,8 @@ export class IndividualEventComponent {
   }
 
   handleDelete(eventId: string) {
+    console.log(eventId);
+
     this.http
       .delete<Event[]>(`http://0.0.0.0:8080/events/${eventId}`)
       .subscribe(() => {

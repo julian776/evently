@@ -22,6 +22,14 @@
   background-color: #fafafa;
 }
 
+.banner {
+  @include flex-center();
+  @include red-element();
+  border-radius: 35px;
+  height: 200px;
+  width: 300px;
+}
+
 .event-title {
   @include flex-center();
   @include red-element();
