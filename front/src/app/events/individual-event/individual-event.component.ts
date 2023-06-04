@@ -5,6 +5,7 @@ import { Event } from '../models/event';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/reducers';
 import { delEvent } from 'src/app/reducers/events/events.actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-individual-event',
@@ -18,7 +19,9 @@ export class IndividualEventComponent {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private store: Store<State>) {}
+    private store: Store<State>,
+    public snackBar: MatSnackBar
+    ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -27,14 +30,11 @@ export class IndividualEventComponent {
       .get<Event>(`http://0.0.0.0:8080/events/${id}`, { observe: 'body' })
       .subscribe((val: Event) => {
         this.event = val;
-
-        console.log(this.event);
       });
   }
 
   handleEdit(eventId: string) {
     this.router.navigate([`/event/edit/${eventId}`]).catch(console.error);
-    console.log('Edit' + eventId);
   }
 
   handleDelete(eventId: string) {
@@ -44,6 +44,10 @@ export class IndividualEventComponent {
       .delete<Event[]>(`http://0.0.0.0:8080/events/${eventId}`)
       .subscribe(() => {
         this.store.dispatch(delEvent({ id: eventId }));
+        this.snackBar.open('Event deleted', '', {
+          duration: 2000,
+        });
+        this.router.navigate(['/events']).catch(console.error);
       });
   }
 }

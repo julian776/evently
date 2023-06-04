@@ -16,6 +16,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     MatNativeDateModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
-    ScrollingModule
+    ScrollingModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

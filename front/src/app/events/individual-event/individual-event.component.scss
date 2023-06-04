@@ -46,7 +46,8 @@
   width: 55vw;
 
   p {
-    font-size: large;
+    margin: 12px;
+    font-size: 22px;
   }
 
   .icon {
@@ -54,18 +55,7 @@
   }
 }
 
-.organizer-container {
-  @include flex-column();
-  min-width: 100%;
-
-  div {
-    display: flex;
-    justify-content: space-between;
-    @include text-card();
-  }
-}
-
-.date-loc-container {
+.event-section-container {
   @include flex-column();
   min-width: 100%;
 
@@ -86,6 +76,10 @@
 
 .vars-text {
   @include flex-center();
+}
+
+.flex-column {
+  flex-direction: column
 }
 
 .price {
