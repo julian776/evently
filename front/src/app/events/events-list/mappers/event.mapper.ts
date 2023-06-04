@@ -10,5 +10,6 @@ export const eventMapper = (event: Event): Event => {
   if (event.title.length >= 70) {
     eventFormatted.title = event.title.split(' ', 7).join(' ') + '...'
   }
+  eventFormatted.title = event.title[0].toUpperCase() + event.title.slice(1,)
   return eventFormatted
 }

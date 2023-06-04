@@ -28,8 +28,8 @@
           <h2 class="event-info">
             {{'Location: ' + event.location}}
           </h2>
-          <h2 class="event-info" [style.background]="event.cost == 0 ? '#539165' : 'rgb(207, 205, 205)'">
-            {{'Cost: ' + event.cost}}
+          <h2 class="event-info" [style.background]="event.cost ? 'rgb(207, 205, 205)' : '#539165'">
+            {{'Cost: ' + (event.cost || 'FREE')}}
           </h2>
         </div>
       </div>

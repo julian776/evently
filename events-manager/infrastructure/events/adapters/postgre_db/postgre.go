@@ -59,8 +59,9 @@ endTime FROM events WHERE id=$1`
 	defer row.Close()
 
 	if row.Next() {
-		var id, title, description, cost, location, organizerName, organizerEmail, startTime, endTime string
+		var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
 		var attendees []string
+		var cost float32
 		err := row.Scan(
 			&title,
 			&description,
@@ -80,6 +81,7 @@ endTime FROM events WHERE id=$1`
 			Id:             id,
 			Title:          title,
 			Description:    description,
+			Cost:           cost,
 			Location:       location,
 			OrganizerName:  organizerName,
 			OrganizerEmail: organizerEmail,
