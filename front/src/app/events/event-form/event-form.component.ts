@@ -30,8 +30,8 @@ export class EventFormComponent {
       cost: ['', Validators.required],
       organizerName: ['', Validators.required],
       organizerEmail: ['', [Validators.required, Validators.email]],
-      startTime: [new Date(), [Validators.required]],
-      endTime: [new Date(), [Validators.required]],
+      startTime: ['', [Validators.required]],
+      endTime: ['', [Validators.required]],
     });
   }
 

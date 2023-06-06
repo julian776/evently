@@ -11,6 +11,7 @@ export const initialState: UserState = {
   user: {
     email: '',
     name: '',
+    purpouseOfUse: ''
   },
   isLoggedIn: false,
 };
@@ -18,5 +19,5 @@ export const initialState: UserState = {
 export const userReducer = createReducer(
   initialState,
   on(login, (state, { user }) => ({...state, user, isLoggedIn: true})),
-  on(logout, (state) => ({...state, user: {email: '' ,name: ''}, isLoggedIn: false})),
+  on(logout, (state) => ({...state, user: {email: '' ,name: '', purpouseOfUse: ''}, isLoggedIn: false})),
 );

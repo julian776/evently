@@ -1,35 +1,25 @@
 <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
   <div class="form-group">
     <label for="title">Title:</label>
-    <input type="text" id="title" formControlName="title">
+    <input class="form-input" type="text" id="title" formControlName="title">
   </div>
 
   <div class="form-group">
     <label for="description">Description:</label>
-    <textarea id="description" formControlName="description"></textarea>
+    <textarea class="form-input" id="description" formControlName="description"></textarea>
   </div>
 
   <div class="form-group">
     <label for="location">Location:</label>
-    <input type="text" id="location" formControlName="location">
+    <input class="form-input" type="text" id="location" formControlName="location">
   </div>
 
   <div class="form-group">
     <label for="cost">Cost:</label>
-    <input type="number" id="cost" formControlName="cost">
+    <input class="form-input" type="number" id="cost" formControlName="cost">
   </div>
 
-  <div class="form-group">
-    <label for="organizerName">Organizer Name:</label>
-    <input type="text" id="organizerName" formControlName="organizerName">
-  </div>
-
-  <div class="form-group">
-    <label for="organizerEmail">Organizer Email:</label>
-    <input type="text" id="organizerEmail" formControlName="organizerEmail">
-  </div>
-
-  <mat-form-field>
+  <mat-form-field style="width: 100%; margin-top: 35px;">
     <mat-label>Enter a date range</mat-label>
     <mat-date-range-input [formGroup]="eventForm" [rangePicker]="picker">
       <input matStartDate formControlName="startTime" placeholder="Start date">
@@ -42,12 +32,12 @@
 
   <div class="form-group">
     <label for="startTime">Start Time:</label>
-    <input type="text" id="startTime" formControlName="startTime">
+    <input class="form-input" type="text" id="startTime" formControlName="startTime">
   </div>
 
   <div class="form-group">
     <label for="endTime">End Time:</label>
-    <input type="text" id="endTime" formControlName="endTime">
+    <input class="form-input" type="text" id="endTime" formControlName="endTime">
   </div>
 
   <button type="submit" [disabled]="eventForm.invalid" class="submit-btn">Submit</button>
