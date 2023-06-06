@@ -1,0 +1,43 @@
+@mixin flex-center() {
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-container {
+  margin-top: 35px;
+  @include flex-center();
+  flex-direction: column;
+  width: 55vw;
+  h1 {
+    @include flex-center();
+    height: 140px;
+    width: 100%;
+    background-color: #b10b0b;
+    color: #fff;
+    border-radius: 80px;
+  }
+  h2 {
+    @include flex-center();
+    padding: 25px;
+    height: 130px;
+    width: 60%;
+    border-radius: 30px;
+    border: 5px #125699 solid;
+  }
+}
+
+.btn {
+  margin-top: 110px;
+  font-size: large;
+  height: 100px;
+  width:50%;
+  background-color:  #ccc;
+  border-radius: 30px;
+  border: 5px #125699 solid;
+  transition: all ease-in-out 0.2s;
+  &:hover {
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+    transform: translateY(-3px);
+  }
+}

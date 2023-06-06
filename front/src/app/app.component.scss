@@ -288,6 +288,24 @@
     width: 1920px;
   }
 
+  .login-button {
+    background-color: #b10b0b;
+    color: #fff;
+    font-size: large;
+    font-weight: 550;
+    height: 45px;
+    width: 85px;
+    margin: 0 16px;
+    border-radius: 4px;
+    border-color: #125699;
+    transition: all ease-in-out 0.2s;
+  }
+
+  .login-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+  }
+
   /* Responsive Styles */
   @media screen and (max-width: 767px) {
     .card-container > *:not(.circle-link) ,

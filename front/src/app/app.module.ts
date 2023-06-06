@@ -17,6 +17,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { UserModule } from './user/user.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -25,8 +27,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     IndividualEventComponent,
     EventFormComponent,
     FooterComponent,
+    HomeComponent,
   ],
   imports: [
+    UserModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

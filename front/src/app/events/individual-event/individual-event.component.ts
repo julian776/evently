@@ -50,4 +50,6 @@ export class IndividualEventComponent {
         this.router.navigate(['/events']).catch(console.error);
       });
   }
+
+  handleAddAttendee(eventId: string) {}
 }
