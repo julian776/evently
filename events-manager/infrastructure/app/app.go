@@ -30,9 +30,10 @@ type App struct {
 	DeleteEventByIdUseCase  *events.DeleteEventByIdUseCase
 	UpdateEventUseCase      *events.UpdateEventUseCase
 	GetAllEventsUseCase     *events.GetAllEventsUseCase
+	AddAttendeeEventUseCase *events.AddAttendeeEventUseCase
 	CreateUserUseCase       *users.CreateUserUseCase
 	GetUserByEmailUseCase   *users.GetUserByEmailUseCase
-	AddAttendeeEventUseCase *events.AddAttendeeEventUseCase
+	LoginUserUseCase        *users.LoginUserUseCase
 	//------ End UseCases-------
 
 }
@@ -51,6 +52,7 @@ func NewApp(
 	addAttendeeEventUseCase *events.AddAttendeeEventUseCase,
 	createUserUseCase *users.CreateUserUseCase,
 	getUserByEmailUseCase *users.GetUserByEmailUseCase,
+	loginUserUseCase *users.LoginUserUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -63,9 +65,10 @@ func NewApp(
 		deleteEventByIdUseCase,
 		updateEventUseCase,
 		getAllEventsUseCase,
+		addAttendeeEventUseCase,
 		createUserUseCase,
 		getUserByEmailUseCase,
-		addAttendeeEventUseCase,
+		loginUserUseCase,
 	}
 }
 

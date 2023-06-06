@@ -33,6 +33,38 @@ func NewPostgreUsersRepository(l logger.Logger, settings configs.PostgreSettigs)
 	}
 }
 
+func (r *PostgreUsersRepository) CheckPasswordWithEmail(
+	ctx context.Context,
+	email string,
+	passwordReceived string,
+) (bool, error) {
+	query := `select
+password FROM users WHERE email=$1`
+
+	row, err := r.db.QueryContext(ctx, query, email)
+	if err != nil {
+		return false, err
+	}
+
+	defer row.Close()
+
+	if row.Next() {
+		var passwordDB string
+		err := row.Scan(
+			&passwordDB,
+		)
+		if err != nil {
+			return false, err
+		}
+
+		if passwordReceived == passwordDB {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 func (r *PostgreUsersRepository) GetUserByEmail(
 	ctx context.Context,
 	email string,
@@ -42,7 +74,6 @@ func (r *PostgreUsersRepository) GetUserByEmail(
 	query := `select
 email,
 name,
-password,
 purpouseOfUse FROM users WHERE email=$1`
 
 	row, err := r.db.QueryContext(ctx, query, email)
@@ -53,11 +84,10 @@ purpouseOfUse FROM users WHERE email=$1`
 	defer row.Close()
 
 	if row.Next() {
-		var name, email, password, purpouseOfUse string
+		var name, email, purpouseOfUse string
 		err := row.Scan(
 			&email,
 			&name,
-			&password,
 			&purpouseOfUse,
 		)
 		if err != nil {
@@ -67,7 +97,6 @@ purpouseOfUse FROM users WHERE email=$1`
 		user = models.User{
 			Name:          name,
 			Email:         email,
-			Password:      password,
 			PurpouseOfUse: purpouseOfUse,
 		}
 	}

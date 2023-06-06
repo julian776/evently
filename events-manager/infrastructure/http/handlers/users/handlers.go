@@ -1,6 +1,7 @@
 package users
 
 import (
+	"events-manager/domain/users/dtos"
 	"events-manager/domain/users/models"
 	users "events-manager/domain/users/usecases"
 	"net/http"
@@ -47,58 +48,39 @@ func getUserByEmail(
 	}
 }
 
-// func getAllEvents(
-// 	getAllEventsUseCase events.GetAllEventsUseCase,
-// ) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		event, err := getAllEventsUseCase.Execute(c)
-// 		if err != nil {
-// 			c.JSON(500, gin.H{
-// 				"error": gin.H{
-// 					"message": "can not retreive event",
-// 				},
-// 			})
-// 			return
-// 		}
-// 		c.JSON(200, event)
-// 	}
-// }
+func login(
+	loginUserUseCase users.LoginUserUseCase,
+) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var json dtos.LoginDTO
+		if err := c.ShouldBindJSON(&json); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		isValid, err := loginUserUseCase.Execute(c, json)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": gin.H{
+					"message": "can not validate login user",
+				},
+			})
+			return
+		}
 
-// func deleteEventById(
-// 	deleteEventByIdUseCase events.DeleteEventByIdUseCase,
-// ) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		event, err := deleteEventByIdUseCase.Execute(c, c.Param("id"))
-// 		if err != nil {
-// 			c.JSON(500, gin.H{
-// 				"error": gin.H{
-// 					"message": "can not delete event",
-// 				},
-// 			})
-// 			return
-// 		}
-// 		c.JSON(200, event)
-// 	}
-// }
+		if isValid {
+			c.JSON(200, gin.H{
+				"message": "succesfully logged in",
+			})
+			return
+		}
 
-// func updateEvent(
-// 	updateEventUseCase events.UpdateEventUseCase,
-// ) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		var json models.User
-// 		if err := c.ShouldBindJSON(&json); err != nil {
-// 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 			return
-// 		}
-// 		event, err := updateEventUseCase.Execute(c, json)
-// 		if err != nil {
-// 			c.JSON(500, gin.H{
-// 				"error": gin.H{
-// 					"message": "can not create an event",
-// 				},
-// 			})
-// 			return
-// 		}
-// 		c.JSON(201, event)
-// 	}
-// }
+		if !isValid {
+			c.JSON(400, gin.H{
+				"error": gin.H{
+					"message": "incorrect password or user not registered",
+				},
+			})
+			return
+		}
+	}
+}
