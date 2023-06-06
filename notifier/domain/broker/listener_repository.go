@@ -2,11 +2,12 @@ package broker
 
 import (
 	"context"
+	"notifier/domain/broker/models"
 )
 
 type BrokerListener interface {
 	AddQueueToListen(queueName string) error
-	AddMessageHandler(queueName string, typeMessage string, handler func(ctx context.Context, command string) interface{})
-	Listen() error
+	AddMessageHandler(typeMessage string, handler models.HandlerFunc)
+	Listen(ctx context.Context)
 	Stop()
 }

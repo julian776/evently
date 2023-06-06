@@ -1,12 +1,10 @@
 package app
 
 import (
-	configs "events-manager/infrastructure/configs/postgres"
-	"events-manager/infrastructure/events"
-	"events-manager/infrastructure/rabbit"
-	"events-manager/infrastructure/users"
-	"events-manager/pkgs/logger"
 	"fmt"
+	"notifier/infrastructure/rabbit"
+	"notifier/infrastructure/reminders"
+	"notifier/pkgs/logger"
 
 	"github.com/google/wire"
 	"github.com/kelseyhightower/envconfig"
@@ -16,22 +14,16 @@ import (
 var SettingsProvider = wire.NewSet(
 	LoadAppSettings,
 	GetLoggerSettings,
-	GetPostgreSettings,
 	GetRabbitSettings,
-	GetEventsSettings,
-	GetUsersSettings,
+	GetMongoSettings,
 )
 
 var appSettings *AppSettings
 
 type AppSettings struct {
-	Logger         *logger.Settings
-	Rabbit         *rabbit.Settings
-	PostgreSettigs *configs.PostgreSettigs
-	EventsSettings *events.EventsSettings
-	UsersSettings  *users.UsersSettings
-	Port           uint64 `envconfig:"PORT" required:"true"`
-	ApiKey         string `envconfig:"API_KEY" default:""`
+	Logger       *logger.Settings
+	Rabbit       *rabbit.Settings
+	MongoSettigs *reminders.MongoSettigs
 }
 
 func LoadAppSettings() AppSettings {
@@ -55,16 +47,8 @@ func GetRabbitSettings(settings AppSettings) rabbit.Settings {
 	return *settings.Rabbit
 }
 
-func GetPostgreSettings(settings AppSettings) configs.PostgreSettigs {
-	return *settings.PostgreSettigs
-}
-
-func GetEventsSettings(settings AppSettings) events.EventsSettings {
-	return *settings.EventsSettings
-}
-
-func GetUsersSettings(settings AppSettings) users.UsersSettings {
-	return *settings.UsersSettings
+func GetMongoSettings(settings AppSettings) reminders.MongoSettigs {
+	return *settings.MongoSettigs
 }
 
 func loadConfigFile() (AppSettings, error) {

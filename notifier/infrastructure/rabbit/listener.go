@@ -80,9 +80,15 @@ func (l *RabbitListener) AddMessageHandler(
 	l.Handlers[typeMessage] = handler
 }
 
+// Listens to the queues added to the `QueuesToListen`
+// slice and processes the messages received from them.
+// It starts a goroutine for each queue to consume
+// messages from it and then processes each message
+// using the appropriate handler registered for its type.
+// The method blocks until the context is done.
 func (l *RabbitListener) Listen(
 	ctx context.Context,
-) chan<- models.Message {
+) {
 	for _, queue := range l.QueuesToListen {
 		go func(queue string) {
 			cMessages, err := l.ch.Consume(queue, "", false, false, false, false, nil)
@@ -97,8 +103,6 @@ func (l *RabbitListener) Listen(
 	}
 
 	<-ctx.Done()
-
-	return nil
 }
 
 func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delivery) {

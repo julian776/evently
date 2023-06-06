@@ -1,4 +1,4 @@
-package repositories
+package emails
 
 import (
 	"context"
@@ -16,10 +16,8 @@ func SendEmail(
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
 
-	// Create authentication
 	smtpAuth := smtp.PlainAuth("", auth.Email, auth.Password, smtpHost)
 
-	// Send actual message
 	err := smtp.SendMail(smtpHost+":"+smtpPort, smtpAuth, auth.Email, to, message)
 	if err != nil {
 		return fmt.Errorf("error sending email %s", err.Error())

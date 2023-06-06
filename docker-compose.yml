@@ -11,8 +11,17 @@ services:
     depends_on:
       rabbit:
         condition: service_healthy
-      #postgres_db: 
-      #  condition: service_healthy
+    
+  notifier:
+    # change to image if you pre built
+    build: ./notifier
+    env_file:
+      - ./notifier/.env
+    volumes:
+      - ./notifier:/app
+    depends_on:
+      rabbit:
+        condition: service_healthy
 
   postgres_db:
     image: postgres
@@ -22,11 +31,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./configs/init.sql:/docker-entrypoint-initdb.d/init.sql
-    # healthcheck:
-    #   test: [ "CMD", "pg_isready", "-q", "-d", "devdb", "-U", "dev" ]
-    #   timeout: 45s
-    #   interval: 10s
-    #   retries: 10
     environment:
       POSTGRES_PASSWORD: 1234
 
