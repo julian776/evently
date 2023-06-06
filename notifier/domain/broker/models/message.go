@@ -12,9 +12,9 @@ type Message struct {
 	// Identifies the target app
 	Target string
 	// The type of command
-	Command string
+	Type string
 	// Command generation time
-	GenerationTime *time.Time
+	GenerationTime time.Time
 	// The command data
 	Body map[string]any
 }

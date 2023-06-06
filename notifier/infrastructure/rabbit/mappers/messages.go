@@ -2,29 +2,23 @@ package mappers
 
 import (
 	"encoding/json"
-	domain "events-manager/domain/app"
-	"time"
+	"notifier/domain/broker/models"
 
-	"github.com/google/uuid"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func MapStructToMessage(structPayload any, typeMessage string) (amqp.Publishing, error) {
-	bodyBytes, err := json.Marshal(structPayload)
+func MapAmqpToMessage(message amqp.Delivery) (models.Message, error) {
+	body := make(map[string]any)
+	err := json.Unmarshal(message.Body, &body)
 	if err != nil {
-		return amqp.Publishing{}, err
+		return models.Message{}, err
 	}
 
-	return amqp.Publishing{
-		Headers: map[string]interface{}{
-			"sourceApplication": domain.APP_NAME,
-		},
-		ContentType:     "application/json",
-		ContentEncoding: "UTF-8",
-		MessageId:       uuid.New().String(),
-		Timestamp:       time.Now(),
-		Type:            typeMessage,
-		AppId:           domain.APP_NAME,
-		Body:            bodyBytes,
+	return models.Message{
+		Id:             message.MessageId,
+		GenerationTime: message.Timestamp,
+		Type:           message.Type,
+		Body:           body,
+		Source:         message.AppId,
 	}, nil
 }
