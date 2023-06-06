@@ -9,9 +9,9 @@ type UsersRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (models.User, error)
 	CreateUser(ctx context.Context, user models.User) (models.User, error)
 	UpdateUser(ctx context.Context, user models.User) (models.User, error)
-	CheckPasswordWithEmail(
+	GetUserAndCheckPasswordWithEmail(
 		ctx context.Context,
 		email string,
 		passwordReceived string,
-	) (bool, error)
+	) (bool, models.User, error)
 }

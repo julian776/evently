@@ -57,24 +57,8 @@ func login(
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		isValid, err := loginUserUseCase.Execute(c, json)
+		user, err := loginUserUseCase.Execute(c, json)
 		if err != nil {
-			c.JSON(500, gin.H{
-				"error": gin.H{
-					"message": "can not validate login user",
-				},
-			})
-			return
-		}
-
-		if isValid {
-			c.JSON(200, gin.H{
-				"message": "succesfully logged in",
-			})
-			return
-		}
-
-		if !isValid {
 			c.JSON(400, gin.H{
 				"error": gin.H{
 					"message": "incorrect password or user not registered",
@@ -82,5 +66,10 @@ func login(
 			})
 			return
 		}
+
+		c.JSON(200, gin.H{
+			"message": "succesfully logged in",
+			"user":    user,
+		})
 	}
 }

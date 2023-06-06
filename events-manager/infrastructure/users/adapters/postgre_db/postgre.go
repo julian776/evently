@@ -33,36 +33,52 @@ func NewPostgreUsersRepository(l logger.Logger, settings configs.PostgreSettigs)
 	}
 }
 
-func (r *PostgreUsersRepository) CheckPasswordWithEmail(
+// It queries the database to retrieve a
+// user with the given email and checks
+// if the passwordReceived matches the
+// password stored in the database for that user.
+func (r *PostgreUsersRepository) GetUserAndCheckPasswordWithEmail(
 	ctx context.Context,
 	email string,
 	passwordReceived string,
-) (bool, error) {
+) (bool, models.User, error) {
+	var user models.User
 	query := `select
-password FROM users WHERE email=$1`
+email,
+password,
+name,
+purpouseOfUse FROM users WHERE email=$1`
 
 	row, err := r.db.QueryContext(ctx, query, email)
 	if err != nil {
-		return false, err
+		return false, models.User{}, err
 	}
 
 	defer row.Close()
 
 	if row.Next() {
-		var passwordDB string
+		var name, email, purpouseOfUse, passwordDB string
 		err := row.Scan(
+			&email,
 			&passwordDB,
+			&name,
+			&purpouseOfUse,
 		)
 		if err != nil {
-			return false, err
+			return false, models.User{}, err
 		}
 
 		if passwordReceived == passwordDB {
-			return true, nil
+			user = models.User{
+				Name:          name,
+				Email:         email,
+				PurpouseOfUse: purpouseOfUse,
+			}
+			return true, user, nil
 		}
 	}
 
-	return false, nil
+	return false, models.User{}, nil
 }
 
 func (r *PostgreUsersRepository) GetUserByEmail(
