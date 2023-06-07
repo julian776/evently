@@ -17,6 +17,8 @@ create table events (
   organizerName text,
 	organizerEmail text,
   foreign key(organizerEmail) REFERENCES users(email),
-	startTime text,
+	startDate text,
+	endDate text,
+  startTime text,
 	endTime text
 );

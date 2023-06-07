@@ -17,6 +17,10 @@ type Event struct {
 
 	OrganizerEmail string `json:"organizerEmail,omitempty" binding:"required"`
 
+	StartDate string `json:"startDate,omitempty" binding:"required"`
+
+	EndDate string `json:"endDate,omitempty" binding:"required"`
+
 	StartTime string `json:"startTime,omitempty" binding:"required"`
 
 	EndTime string `json:"endTime,omitempty" binding:"required"`

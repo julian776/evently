@@ -245,7 +245,16 @@ func (r *PostgreEventsRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `update events set title=$1, description=$2, location=$3, organizerName=$4, organizerEmail=$5, startTime=$6, endTime=$7  where id=$8;`
+	query := `UPDATE events set
+title=$1, 
+description=$2, 
+location=$3,
+cost=$4,
+startDate=$6, 
+endDate=$7, 
+startTime=$8, 
+endTime=$9  
+where id=$8`
 
 	_, err := r.db.ExecContext(
 		ctx,
@@ -253,8 +262,7 @@ func (r *PostgreEventsRepository) UpdateEvent(
 		event.Title,
 		event.Description,
 		event.Location,
-		event.OrganizerName,
-		event.OrganizerEmail,
+		event.Cost,
 		event.StartTime,
 		event.EndTime,
 		event.Id,
