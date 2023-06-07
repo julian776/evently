@@ -70,9 +70,9 @@ purpouseOfUse FROM users WHERE email=$1`
 
 		if passwordReceived == passwordDB {
 			user = models.User{
-				Name:          name,
-				Email:         email,
-				PurpouseOfUse: purpouseOfUse,
+				Name:         name,
+				Email:        email,
+				PurposeOfUse: purpouseOfUse,
 			}
 			return true, user, nil
 		}
@@ -111,9 +111,9 @@ purpouseOfUse FROM users WHERE email=$1`
 		}
 
 		user = models.User{
-			Name:          name,
-			Email:         email,
-			PurpouseOfUse: purpouseOfUse,
+			Name:         name,
+			Email:        email,
+			PurposeOfUse: purpouseOfUse,
 		}
 	}
 
@@ -124,30 +124,28 @@ func (r *PostgreUsersRepository) CreateUser(
 	ctx context.Context,
 	user models.User,
 ) (models.User, error) {
-	query := `insert into
+	query := `INSERT INTO
 users(email, name, password, purpouseOfUse)
-values($1, $2, $3, $4) RETURNING *;`
+values($1, $2, $3, $4) RETURNING email, name, purpouseOfUse;`
 
-	var name, email, password, purpouseOfUse string
+	var name, email, purpouseOfUse string
 	err := r.db.QueryRowContext(
 		ctx,
 		query,
 		user.Email,
 		user.Name,
 		user.Password,
-		user.PurpouseOfUse,
+		user.PurposeOfUse,
 	).Scan(
 		&email,
 		&name,
-		&password,
 		&purpouseOfUse,
 	)
 
 	userCreated := models.User{
-		Name:          name,
-		Email:         email,
-		Password:      password,
-		PurpouseOfUse: purpouseOfUse,
+		Name:         name,
+		Email:        email,
+		PurposeOfUse: purpouseOfUse,
 	}
 
 	if err != nil {
@@ -173,7 +171,7 @@ purpouseOfUse=$4 where id=$8;`
 		user.Name,
 		user.Email,
 		user.Password,
-		user.PurpouseOfUse,
+		user.PurposeOfUse,
 	)
 	if err != nil {
 		return models.User{}, err

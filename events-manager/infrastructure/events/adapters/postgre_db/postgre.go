@@ -157,10 +157,12 @@ location,
 attendees,
 organizerName,
 organizerEmail,
+startDate,
+endDate,
 startTime,
-endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
+endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`
 
-	var id, title, description, location, organizerName, organizerEmail, startTime, endTime string
+	var id, title, description, location, organizerName, organizerEmail, startDate, endDate, startTime, endTime string
 	var attendees []string
 	var cost float32
 	err := r.db.QueryRowContext(
@@ -173,6 +175,8 @@ endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
 		pq.Array(event.Attendees),
 		event.OrganizerName,
 		event.OrganizerEmail,
+		event.StartDate,
+		event.EndDate,
 		event.StartTime,
 		event.EndTime,
 	).Scan(
@@ -184,6 +188,8 @@ endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`
 		pq.Array(&attendees),
 		&organizerName,
 		&organizerEmail,
+		&startDate,
+		&endDate,
 		&startTime,
 		&endTime,
 	)
@@ -245,7 +251,7 @@ func (r *PostgreEventsRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	query := `UPDATE events set
+	query := `UPDATE events SET
 title=$1, 
 description=$2, 
 location=$3,
@@ -254,7 +260,7 @@ startDate=$6,
 endDate=$7, 
 startTime=$8, 
 endTime=$9  
-where id=$8`
+WHERE id=$8`
 
 	_, err := r.db.ExecContext(
 		ctx,
@@ -278,7 +284,7 @@ func (r *PostgreEventsRepository) DeleteEventById(
 	ctx context.Context,
 	id string,
 ) (models.Event, error) {
-	query := `delete from events where id=$1;`
+	query := `DELETE FROM events WHERE id=$1;`
 	_, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {
 		return models.Event{}, err

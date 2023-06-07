@@ -7,5 +7,5 @@ type User struct {
 
 	Password string `json:"password,omitempty" binding:"required"`
 
-	PurpouseOfUse string `json:"purpouseOfUse,omitempty" binding:"required"`
+	PurposeOfUse string `json:"purposeOfUse,omitempty" binding:"required"`
 }
