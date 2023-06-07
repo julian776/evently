@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { User } from '../models/user';
 import { login } from 'src/app/reducers/user/user.actions';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-singup',
@@ -36,7 +37,7 @@ export class SingupComponent {
     }
 
     this.http
-      .post<User>(`http://0.0.0.0:8080/users`, this.singupForm.value, {
+      .post<User>(`${environment.apiUrl}/users`, this.singupForm.value, {
         observe: 'response',
       })
       .subscribe((res) => {

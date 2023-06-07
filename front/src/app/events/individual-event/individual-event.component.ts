@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { State } from 'src/app/reducers';
 import { delEvent } from 'src/app/reducers/events/events.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-individual-event',
@@ -27,7 +28,7 @@ export class IndividualEventComponent {
     const id = this.route.snapshot.paramMap.get('id');
 
     this.http
-      .get<Event>(`http://0.0.0.0:8080/events/${id}`, { observe: 'body' })
+      .get<Event>(`${environment.apiUrl}/events/${id}`, { observe: 'body' })
       .subscribe((val: Event) => {
         this.event = val;
       });
@@ -41,7 +42,7 @@ export class IndividualEventComponent {
     console.log(eventId);
 
     this.http
-      .delete<Event[]>(`http://0.0.0.0:8080/events/${eventId}`)
+      .delete<Event[]>(`${environment.apiUrl}/events/${eventId}`)
       .subscribe(() => {
         this.store.dispatch(delEvent({ id: eventId }));
         this.snackBar.open('Event deleted', '', {

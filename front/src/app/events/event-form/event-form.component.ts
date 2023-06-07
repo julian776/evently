@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserState } from 'src/app/reducers/user/user..reducer';
 import { User } from 'src/app/user/models/user';
 import { State } from 'src/app/reducers';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-event-form',
@@ -47,7 +49,7 @@ export class EventFormComponent {
       return;
     }
     this.http
-      .get<Event>(`http://0.0.0.0:8080/events/${id}`, { observe: 'body' })
+      .get<Event>(`${environment.apiUrl}/events/${id}`, { observe: 'body' })
       .subscribe((event: Event) => {
         this.initializeForm(event);
       });
@@ -104,7 +106,7 @@ export class EventFormComponent {
     // Create new one
     if (id == '0') {
       this.http
-        .post<Event>(`http://0.0.0.0:8080/events`, event)
+        .post<Event>(`${environment.apiUrl}/events`, event)
         .subscribe((event: Event) => {
           console.log(event);
           this.store.dispatch(addEvent({ event }));
@@ -114,7 +116,7 @@ export class EventFormComponent {
 
     // Update one
     this.http
-      .put<Event>(`http://0.0.0.0:8080/events`, event)
+      .put<Event>(`${environment.apiUrl}/events`, event)
       .subscribe((event: Event) => {
         console.log(event);
         this.store.dispatch(updateEvent({ event }));

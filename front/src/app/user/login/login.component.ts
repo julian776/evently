@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { login } from 'src/app/reducers/user/user.actions';
 import { User } from '../models/user';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +45,7 @@ export class LoginComponent {
   onSubmit(): void {
     this.http
       .post<{ message: string; user: User }>(
-        `http://0.0.0.0:8080/users/login`,
+        `${environment.apiUrl}/users/login`,
         this.loginForm.value,
         { observe: 'response' }
       )

@@ -8,6 +8,7 @@ import { State } from 'src/app/reducers';
 import { loadEvents } from 'src/app/reducers/events/events.actions';
 import { Observable, map } from 'rxjs';
 import { selectEventsList } from 'src/app/reducers/events/selectors/event-list.selector';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'events',
@@ -27,7 +28,7 @@ export class EventsComponent {
 
   ngOnInit() {
     this.http
-      .get<Event[]>(`http://0.0.0.0:8080/events`, { observe: 'body' })
+      .get<Event[]>(`${environment.apiUrl}/events`, { observe: 'body' })
       .subscribe((val: Event[]) => {
         this.store.dispatch(loadEvents({ events: val }));
       });
