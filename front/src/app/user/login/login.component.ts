@@ -52,6 +52,7 @@ export class LoginComponent {
         console.log(res.ok);
         if (res.ok && res.body) {
           this.store.dispatch(login({ user: res.body.user }));
+          this.router.navigate(['events']).catch(err => err);
         }
       });
   }

@@ -7,6 +7,8 @@ export type Event = {
 
   location: string;
 
+  attendees?: string[]
+
   cost: number;
 
   organizerName: string;

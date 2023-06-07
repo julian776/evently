@@ -16,7 +16,9 @@ export const eventsReducer = createReducer(
     return newState;
   }),
   on(addEvent, (state, { event }) => {
-    const newState = state;
+    const newState: EventsState = {
+      ...state
+    };
     newState[event.id] = event;
     return newState;
   }),
