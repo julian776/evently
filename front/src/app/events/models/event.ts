@@ -13,6 +13,10 @@ export type Event = {
 
   organizerEmail: string;
 
+  startDate: Date | string
+
+  endDate: Date | string
+
   startTime: string;
 
   endTime: string;
