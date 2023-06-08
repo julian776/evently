@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"events-manager/domain/broker"
+	types "events-manager/domain/events"
 	"events-manager/domain/events/models"
 	"events-manager/domain/events/repositories"
 	"events-manager/infrastructure/events"
@@ -30,7 +31,7 @@ func (u *DeleteEventByIdUseCase) Execute(ctx context.Context, id string) (models
 		ctx,
 		u.eventsSettings.Queue,
 		eventCreated,
-		models.EVENT_DELETED,
+		types.EVENT_DELETED,
 	)
 	if err != nil {
 		u.logger.Errorf("Error publishing delete event %s", err.Error())

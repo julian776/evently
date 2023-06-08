@@ -3,8 +3,8 @@ package events
 import (
 	"context"
 	"events-manager/domain/broker"
+	types "events-manager/domain/events"
 	"events-manager/domain/events/dtos"
-	"events-manager/domain/events/models"
 	"events-manager/domain/events/repositories"
 	"events-manager/infrastructure/events"
 	"events-manager/pkgs/logger"
@@ -31,7 +31,7 @@ func (u *AddAttendeeEventUseCase) Execute(ctx context.Context, addAttendeDTO dto
 		ctx,
 		u.eventsSettings.Queue,
 		attendees,
-		models.EVENT_CREATED,
+		types.ADDED_ATTENDEE,
 	)
 	if err != nil {
 		u.logger.Errorf("Error publishing event %s", err.Error())

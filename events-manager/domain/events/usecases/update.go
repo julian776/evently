@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"events-manager/domain/broker"
+	types "events-manager/domain/events"
 	"events-manager/domain/events/models"
 	"events-manager/domain/events/repositories"
 	"events-manager/infrastructure/events"
@@ -29,7 +30,7 @@ func (u *UpdateEventUseCase) Execute(ctx context.Context, event models.Event) (m
 	err = u.publisher.PublishMessageWithContext(
 		ctx, u.eventsSettings.Queue,
 		eventUpdated,
-		models.EVENT_UPDATED,
+		types.EVENT_UPDATED,
 	)
 	if err != nil {
 		u.logger.Errorf("Error publishing event %s", err.Error())

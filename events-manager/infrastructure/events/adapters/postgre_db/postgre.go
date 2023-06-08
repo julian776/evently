@@ -203,6 +203,8 @@ endTime) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`
 		Attendees:      attendees,
 		OrganizerName:  organizerName,
 		OrganizerEmail: organizerEmail,
+		StartDate:      startDate,
+		EndDate:        endDate,
 		StartTime:      startTime,
 		EndTime:        endTime,
 	}
