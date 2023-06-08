@@ -2,6 +2,7 @@ package events
 
 import (
 	"context"
+	"fmt"
 	events "notifier/domain/events"
 	eventsModels "notifier/domain/events/models"
 	"notifier/domain/listener/models"
@@ -16,15 +17,14 @@ func SetHandlers(a *app.App) {
 
 	a.Listener.AddMessageHandler(
 		events.EVENT_CREATED,
-		func(ctx context.Context, message models.Message) {
+		func(ctx context.Context, message models.Message) error {
 			var event eventsModels.Event
 			err := mapstructure.Decode(message.Body, &event)
 			if err != nil {
-				a.Logger.Errorf("Can not parse message to event")
-				return
+				return fmt.Errorf("can not parse message to event %s", err.Error())
 			}
 
-			a.NotifyAndSaveReminderUseCase.Execute(ctx, event)
+			return a.NotifyAndSaveReminderUseCase.Execute(ctx, event)
 		},
 	)
 }

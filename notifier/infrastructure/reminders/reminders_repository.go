@@ -7,6 +7,7 @@ import (
 	"notifier/pkgs/logger"
 	"time"
 
+	"github.com/mitchellh/mapstructure"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -39,13 +40,18 @@ func NewRemindersMongoRepository(l logger.Logger, settings MongoSettigs) *Remind
 func (r *RemindersMongoRepository) CreateReminder(
 	ctx context.Context,
 	reminder models.Reminder,
-) ([]models.Reminder, error) {
-	res, err := r.coll.InsertOne(ctx, reminder)
+) (models.Reminder, error) {
+	var reminderCreated models.Reminder
+
+	res, err := r.coll.InsertOne(
+		ctx,
+		reminder,
+	)
 	if err != nil {
-		return []models.Reminder{}, fmt.Errorf("can not create reminder %s", err.Error())
+		return reminderCreated, fmt.Errorf("can not create reminder %s", err.Error())
 	}
-	fmt.Println(res)
-	return []models.Reminder{}, nil
+	mapstructure.Decode(res, &reminderCreated)
+	return reminderCreated, nil
 }
 
 func (r *RemindersMongoRepository) GetAllTodayReminders(ctx context.Context) ([]models.Reminder, error) {

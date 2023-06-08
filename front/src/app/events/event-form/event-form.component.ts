@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -22,6 +23,7 @@ import { environment } from '../../../environments/environment';
 })
 export class EventFormComponent {
   user!: User;
+  minDate: Date;
   eventForm!: FormGroup;
 
   constructor(
@@ -30,7 +32,10 @@ export class EventFormComponent {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private store: Store<State>
-  ) {}
+  ) {
+    const today = new Date()
+    this.minDate = new Date(today.getFullYear(), today.getMonth())
+  }
 
   ngOnInit() {
     this.store
@@ -83,8 +88,8 @@ export class EventFormComponent {
       description: [description, Validators.required],
       location: [location, Validators.required],
       cost: [cost, Validators.required],
-      startDate: [startDate, [Validators.required]],
-      endDate: [endDate, [Validators.required]],
+      startDate: new FormControl(startDate, Validators.required),
+      endDate: new FormControl(endDate, Validators.required),
       startTime: [
         startTime,
         [Validators.required, Validators.max(24), Validators.min(0)],
@@ -100,6 +105,9 @@ export class EventFormComponent {
     if (this.eventForm.invalid) {
       return;
     }
+
+    console.log('EVENT:' , this.eventForm.value);
+
 
     const id = this.route.snapshot.paramMap.get('id');
     const event = this.addOrganizerInfoToEvent(this.eventForm.value);

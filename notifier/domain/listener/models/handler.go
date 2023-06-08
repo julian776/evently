@@ -11,4 +11,4 @@ import "context"
 type HandlerFunc func(
 	ctx context.Context,
 	message Message,
-)
+) error

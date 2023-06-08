@@ -20,11 +20,10 @@ type NotifyAndSaveReminderUseCase struct {
 func (u *NotifyAndSaveReminderUseCase) Execute(
 	ctx context.Context,
 	event models.Event,
-) {
-	dateToSend, err := time.Parse("ISO", event.StartDate)
-	fmt.Println("DATE: ", dateToSend)
+) error {
+	dateToSend, err := time.Parse("02/01/2006", event.StartDate)
 	if err != nil {
-		return
+		return err
 	}
 
 	reminder := rModels.Reminder{
@@ -33,19 +32,14 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 		MessageToSend:  fmt.Sprintf("Remember your event %s", event.Title),
 		EmailsToNotify: []string{},
 	}
-	fmt.Println(reminder)
-	//todayReminders, err := u.remindersRepository.CreateReminder(ctx)
-	if err != nil {
-		u.logger.Errorf("error creating event %s", err.Error())
-		return
-	}
 
+	reminderCreated, err := u.remindersRepository.CreateReminder(ctx, reminder)
 	if err != nil {
-		u.logger.Errorf("Error publishing event %s", err.Error())
-		return
+		return err
 	}
+	fmt.Println("HPTA:", reminderCreated)
 
-	return
+	return nil
 }
 
 func NewNotifyAndSaveReminderUseCase(

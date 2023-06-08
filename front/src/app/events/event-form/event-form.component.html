@@ -21,8 +21,8 @@
 
   <mat-form-field style="width: 100%; margin-bottom: 20px;">
     <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [formGroup]="eventForm" [rangePicker]="picker">
-      <input matStartDate formControlName="startDate" placeholder="Start date">
+    <mat-date-range-input [min]="minDate" [formGroup]="eventForm" [rangePicker]="picker">
+      <input matStartDate [min]="minDate" formControlName="startDate" placeholder="Start date">
       <input matEndDate formControlName="endDate" placeholder="End date">
     </mat-date-range-input>
     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>

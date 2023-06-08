@@ -101,6 +101,7 @@ func (l *RabbitListener) Listen(
 
 			for message := range cMessages {
 				l.processMessage(ctx, message)
+				message.Acknowledger.Ack(message.DeliveryTag, false)
 			}
 		}(queue)
 	}
@@ -126,6 +127,12 @@ func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delive
 	}
 
 	for _, handler := range handlers {
-		handler(ctx, messageMapped)
+		err := handler(ctx, messageMapped)
+		if err != nil {
+			l.logger.Errorf("error in handler when processing message %s", err.Error())
+			message.Acknowledger.Nack(message.DeliveryTag, false, false)
+		}
 	}
+
+	message.Acknowledger.Ack(message.DeliveryTag, false)
 }

@@ -9,7 +9,7 @@ type RemindersRepository interface {
 	CreateReminder(
 		ctx context.Context,
 		reminder models.Reminder,
-	) ([]models.Reminder, error)
+	) (models.Reminder, error)
 
 	GetAllTodayReminders(ctx context.Context) ([]models.Reminder, error)
 
