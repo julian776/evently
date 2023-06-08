@@ -2,7 +2,7 @@ package mappers
 
 import (
 	"encoding/json"
-	"notifier/domain/broker/models"
+	"notifier/domain/listener/models"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )

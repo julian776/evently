@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"notifier/domain/broker/models"
+	"notifier/domain/listener/models"
 	"notifier/infrastructure/rabbit/mappers"
 	"notifier/pkgs/logger"
 
@@ -21,10 +21,10 @@ type RabbitListener struct {
 	logger         logger.Logger
 	conn           *amqp.Connection
 	ch             *amqp.Channel
-	QueuesToListen []string
+	queuesToListen []string
 
 	// Key is the type of message
-	Handlers map[string]models.HandlerFunc
+	handlers map[string][]models.HandlerFunc
 }
 
 func (l *RabbitListener) Stop() {
@@ -52,7 +52,8 @@ func NewRabbitListener(
 		logger:         logger,
 		conn:           conn,
 		ch:             ch,
-		QueuesToListen: []string{},
+		queuesToListen: []string{},
+		handlers:       make(map[string][]models.HandlerFunc),
 	}
 }
 
@@ -69,27 +70,29 @@ func (l *RabbitListener) AddQueueToListen(queueName string) error {
 		return fmt.Errorf("failed to declare a queue: %s", err.Error())
 	}
 
-	l.QueuesToListen = append(l.QueuesToListen, queueName)
+	l.queuesToListen = append(l.queuesToListen, queueName)
 	return nil
 }
 
+// This method allows adding a new handler
+// function for a specific message type.
 func (l *RabbitListener) AddMessageHandler(
 	typeMessage string,
 	handler models.HandlerFunc,
 ) {
-	l.Handlers[typeMessage] = handler
+	l.handlers[typeMessage] = append(l.handlers[typeMessage], handler)
 }
 
-// Listens to the queues added to the `QueuesToListen`
-// slice and processes the messages received from them.
+// Listens to the queues added and processes
+// the messages received from them.
 // It starts a goroutine for each queue to consume
 // messages from it and then processes each message
-// using the appropriate handler registered for its type.
+// using the appropiate handlers registered for its type.
 // The method blocks until the context is done.
 func (l *RabbitListener) Listen(
 	ctx context.Context,
 ) {
-	for _, queue := range l.QueuesToListen {
+	for _, queue := range l.queuesToListen {
 		go func(queue string) {
 			cMessages, err := l.ch.Consume(queue, "", false, false, false, false, nil)
 			if err != nil {
@@ -105,8 +108,15 @@ func (l *RabbitListener) Listen(
 	<-ctx.Done()
 }
 
+// Checks if there is a registered handler for
+// the message type, and if not, it logs a warning
+// and ignores the message.
+// If there is a registered handlers, it maps the
+// `amqp.Delivery` message to a domain `Message`
+// using a mapper function, and then calls each
+// registered handler.
 func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delivery) {
-	handler, ok := l.Handlers[message.Type]
+	handlers, ok := l.handlers[message.Type]
 	if !ok {
 		l.logger.Warnf("ignoring message due to no handler registered, message type %s", message.Type)
 	}
@@ -114,5 +124,8 @@ func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delive
 	if err != nil {
 		l.logger.Errorf("can not process message %s", err.Error())
 	}
-	handler(ctx, messageMapped)
+
+	for _, handler := range handlers {
+		handler(ctx, messageMapped)
+	}
 }

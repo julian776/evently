@@ -1,8 +1,8 @@
 package models
 
 type Reminder struct {
-	EventId        string
-	DateToSend     string
-	MessageToSend  string
-	EmailsToNotify []string
+	EventId        string   `json:"eventId,omitempty"`
+	DateToSend     string   `json:"dateToSend,omitempty"`
+	MessageToSend  string   `json:"messageToSend,omitempty"`
+	EmailsToNotify []string `json:"emailsToNotify,omitempty"`
 }

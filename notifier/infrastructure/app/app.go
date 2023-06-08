@@ -3,7 +3,8 @@ package app
 import (
 	"context"
 	"log"
-	"notifier/domain/broker"
+	events "notifier/domain/events/usecases"
+	"notifier/domain/listener"
 	reminders "notifier/domain/reminders/repositories"
 	"notifier/pkgs/logger"
 	"os"
@@ -15,11 +16,11 @@ import (
 type App struct {
 	Logger              logger.Logger
 	Settings            AppSettings
-	BrokerListener      broker.BrokerListener
+	Listener            listener.Listener
 	RemindersRepository reminders.RemindersRepository
 
 	//------ UseCases-------
-
+	NotifyAndSaveReminderUseCase *events.NotifyAndSaveReminderUseCase
 	//------ End UseCases-------
 
 }
@@ -27,18 +28,22 @@ type App struct {
 func NewApp(
 	logger logger.Logger,
 	appSettings AppSettings,
-	brokerListener broker.BrokerListener,
+	listener listener.Listener,
 	remindersRepository reminders.RemindersRepository,
+	notifyAndSaveReminderUseCase *events.NotifyAndSaveReminderUseCase,
 ) *App {
 	return &App{
 		logger,
 		appSettings,
-		brokerListener,
+		listener,
 		remindersRepository,
+		notifyAndSaveReminderUseCase,
 	}
 }
 
 func (a *App) Run() error {
+	a.Listener.Listen(context.TODO())
+
 	quit := make(chan os.Signal, 1)
 
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -52,7 +57,7 @@ func (a *App) Run() error {
 	log.Println("timeout of 5 seconds. closing broker connection")
 
 	// Close broker connection
-	a.BrokerListener.Stop()
+	a.Listener.Stop()
 
 	log.Println("Server exiting")
 

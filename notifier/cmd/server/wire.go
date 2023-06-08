@@ -4,7 +4,8 @@
 package main
 
 import (
-	"notifier/domain/broker"
+	events "notifier/domain/events/usecases"
+	"notifier/domain/listener"
 	remindersD "notifier/domain/reminders/repositories"
 	"notifier/infrastructure/app"
 	"notifier/infrastructure/rabbit"
@@ -23,7 +24,8 @@ func CreateApp() *app.App {
 		logger.NewLogger,
 		wire.Bind(new(logger.Logger), new(*zap.SugaredLogger)),
 		rabbit.NewRabbitListener,
-		wire.Bind(new(broker.BrokerListener), new(*rabbit.RabbitListener)),
+		wire.Bind(new(listener.Listener), new(*rabbit.RabbitListener)),
+		events.UseCasesProvider,
 		app.NewApp,
 	)
 	return new(app.App)

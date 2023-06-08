@@ -7,6 +7,7 @@
 package main
 
 import (
+	"notifier/domain/events/usecases"
 	"notifier/infrastructure/app"
 	"notifier/infrastructure/rabbit"
 	"notifier/infrastructure/reminders"
@@ -23,6 +24,7 @@ func CreateApp() *app.App {
 	rabbitListener := rabbit.NewRabbitListener(sugaredLogger, rabbitSettings)
 	mongoSettigs := app.GetMongoSettings(appSettings)
 	remindersMongoRepository := reminders.NewRemindersMongoRepository(sugaredLogger, mongoSettigs)
-	appApp := app.NewApp(sugaredLogger, appSettings, rabbitListener, remindersMongoRepository)
+	notifyAndSaveReminderUseCase := events.NewNotifyAndSaveReminderUseCase(sugaredLogger, rabbitListener, remindersMongoRepository)
+	appApp := app.NewApp(sugaredLogger, appSettings, rabbitListener, remindersMongoRepository, notifyAndSaveReminderUseCase)
 	return appApp
 }

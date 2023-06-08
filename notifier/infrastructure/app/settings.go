@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"notifier/infrastructure/events"
 	"notifier/infrastructure/rabbit"
 	"notifier/infrastructure/reminders"
 	"notifier/pkgs/logger"
@@ -16,14 +17,18 @@ var SettingsProvider = wire.NewSet(
 	GetLoggerSettings,
 	GetRabbitSettings,
 	GetMongoSettings,
+	GetEventsSettings,
 )
 
 var appSettings *AppSettings
 
 type AppSettings struct {
-	Logger       *logger.Settings
-	Rabbit       *rabbit.Settings
-	MongoSettigs *reminders.MongoSettigs
+	Logger         *logger.Settings
+	Rabbit         *rabbit.Settings
+	MongoSettigs   *reminders.MongoSettigs
+	EventsSettings *events.EventsSettings
+	Port           uint64 `envconfig:"PORT" required:"true"`
+	ApiKey         string `envconfig:"API_KEY" default:""`
 }
 
 func LoadAppSettings() AppSettings {
@@ -49,6 +54,10 @@ func GetRabbitSettings(settings AppSettings) rabbit.Settings {
 
 func GetMongoSettings(settings AppSettings) reminders.MongoSettigs {
 	return *settings.MongoSettigs
+}
+
+func GetEventsSettings(settings AppSettings) events.EventsSettings {
+	return *settings.EventsSettings
 }
 
 func loadConfigFile() (AppSettings, error) {

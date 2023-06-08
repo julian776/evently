@@ -2,6 +2,7 @@ package reminders
 
 import (
 	"context"
+	"fmt"
 	"notifier/domain/reminders/models"
 	"notifier/pkgs/logger"
 	"time"
@@ -14,6 +15,7 @@ type RemindersMongoRepository struct {
 	logger       logger.Logger
 	mongoSettigs MongoSettigs
 	db           *mongo.Database
+	coll         *mongo.Collection
 }
 
 func NewRemindersMongoRepository(l logger.Logger, settings MongoSettigs) *RemindersMongoRepository {
@@ -24,12 +26,26 @@ func NewRemindersMongoRepository(l logger.Logger, settings MongoSettigs) *Remind
 		l.Errorf("can not connect to mongo %s", err.Error())
 	}
 	db := client.Database(settings.DBName)
+	coll := db.Collection(settings.CollName)
 
 	return &RemindersMongoRepository{
 		l,
 		settings,
 		db,
+		coll,
 	}
+}
+
+func (r *RemindersMongoRepository) CreateReminder(
+	ctx context.Context,
+	reminder models.Reminder,
+) ([]models.Reminder, error) {
+	res, err := r.coll.InsertOne(ctx, reminder)
+	if err != nil {
+		return []models.Reminder{}, fmt.Errorf("can not create reminder %s", err.Error())
+	}
+	fmt.Println(res)
+	return []models.Reminder{}, nil
 }
 
 func (r *RemindersMongoRepository) GetAllTodayReminders(ctx context.Context) ([]models.Reminder, error) {
