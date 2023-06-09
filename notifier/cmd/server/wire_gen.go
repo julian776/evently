@@ -24,7 +24,8 @@ func CreateApp() *app.App {
 	rabbitListener := rabbit.NewRabbitListener(sugaredLogger, rabbitSettings)
 	mongoSettigs := app.GetMongoSettings(appSettings)
 	remindersMongoRepository := reminders.NewRemindersMongoRepository(sugaredLogger, mongoSettigs)
-	notifyAndSaveReminderUseCase := events.NewNotifyAndSaveReminderUseCase(sugaredLogger, rabbitListener, remindersMongoRepository)
+	emailsSettings := app.GetEmailsSettings(appSettings)
+	notifyAndSaveReminderUseCase := events.NewNotifyAndSaveReminderUseCase(sugaredLogger, rabbitListener, remindersMongoRepository, emailsSettings)
 	appApp := app.NewApp(sugaredLogger, appSettings, rabbitListener, remindersMongoRepository, notifyAndSaveReminderUseCase)
 	return appApp
 }

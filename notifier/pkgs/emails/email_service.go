@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/smtp"
-	"notifier/pkgs/emails/models"
 )
 
 func SendEmail(
 	ctx context.Context,
-	auth models.Auth,
+	auth Auth,
 	to []string,
 	message []byte,
 ) error {

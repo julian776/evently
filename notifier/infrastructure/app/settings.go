@@ -5,6 +5,7 @@ import (
 	"notifier/infrastructure/events"
 	"notifier/infrastructure/rabbit"
 	"notifier/infrastructure/reminders"
+	"notifier/pkgs/emails"
 	"notifier/pkgs/logger"
 
 	"github.com/google/wire"
@@ -18,6 +19,7 @@ var SettingsProvider = wire.NewSet(
 	GetRabbitSettings,
 	GetMongoSettings,
 	GetEventsSettings,
+	GetEmailsSettings,
 )
 
 var appSettings *AppSettings
@@ -27,6 +29,7 @@ type AppSettings struct {
 	Rabbit         *rabbit.Settings
 	MongoSettigs   *reminders.MongoSettigs
 	EventsSettings *events.EventsSettings
+	EmailsSettings *emails.Settings
 	Port           uint64 `envconfig:"PORT" required:"true"`
 	ApiKey         string `envconfig:"API_KEY" default:""`
 }
@@ -58,6 +61,10 @@ func GetMongoSettings(settings AppSettings) reminders.MongoSettigs {
 
 func GetEventsSettings(settings AppSettings) events.EventsSettings {
 	return *settings.EventsSettings
+}
+
+func GetEmailsSettings(settings AppSettings) emails.Settings {
+	return *settings.EmailsSettings
 }
 
 func loadConfigFile() (AppSettings, error) {

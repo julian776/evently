@@ -92,6 +92,7 @@ func (l *RabbitListener) AddMessageHandler(
 func (l *RabbitListener) Listen(
 	ctx context.Context,
 ) {
+	l.logger.Infof("Listening for incoming messages...")
 	for _, queue := range l.queuesToListen {
 		go func(queue string) {
 			cMessages, err := l.ch.Consume(queue, "", false, false, false, false, nil)

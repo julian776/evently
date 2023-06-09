@@ -7,7 +7,6 @@ import (
 	"notifier/domain/listener"
 	reminders "notifier/domain/reminders/repositories"
 	"notifier/pkgs/logger"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -42,12 +41,10 @@ func NewApp(
 }
 
 func (a *App) Run() error {
-	a.Listener.Listen(context.TODO())
 
-	quit := make(chan os.Signal, 1)
+	ctx, _ := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
+	a.Listener.Listen(ctx)
 	a.Logger.Infof("Shutdown Server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
