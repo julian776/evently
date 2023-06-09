@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"notifier/domain/events/models"
-	"notifier/domain/listener"
 	rModels "notifier/domain/reminders/models"
 	reminders "notifier/domain/reminders/repositories"
 	"notifier/pkgs/emails"
@@ -14,7 +13,6 @@ import (
 
 type NotifyAndSaveReminderUseCase struct {
 	logger              logger.Logger
-	listener            listener.Listener
 	remindersRepository reminders.RemindersRepository
 	emailsSettings      emails.Settings
 }
@@ -27,7 +25,7 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 		Email:    u.emailsSettings.Email,
 		Password: u.emailsSettings.Password,
 	}
-	message := []byte(fmt.Sprintf("Your event %s was succesfully created", event.Title))
+	message := []byte(fmt.Sprintf("Evently\n\nYour new event was succesfully created\n\n%s", event.Title))
 
 	err := emails.SendEmail(
 		ctx,
@@ -46,7 +44,7 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 
 	reminder := rModels.Reminder{
 		EventId:        event.Id,
-		DateToSend:     dateToSend.String(),
+		DateToSend:     dateToSend,
 		MessageToSend:  fmt.Sprintf("Remember your event %s", event.Title),
 		EmailsToNotify: []string{},
 	}
@@ -61,13 +59,11 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 
 func NewNotifyAndSaveReminderUseCase(
 	logger logger.Logger,
-	listener listener.Listener,
 	remindersRepository reminders.RemindersRepository,
 	emailsSettings emails.Settings,
 ) *NotifyAndSaveReminderUseCase {
 	return &NotifyAndSaveReminderUseCase{
 		logger,
-		listener,
 		remindersRepository,
 		emailsSettings,
 	}

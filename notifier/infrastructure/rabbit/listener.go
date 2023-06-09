@@ -8,6 +8,7 @@ import (
 	"notifier/infrastructure/rabbit/mappers"
 	"notifier/pkgs/logger"
 
+	"github.com/rabbitmq/amqp091-go"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -101,8 +102,10 @@ func (l *RabbitListener) Listen(
 			}
 
 			for message := range cMessages {
-				l.processMessage(ctx, message)
-				message.Acknowledger.Ack(message.DeliveryTag, false)
+				go func(message amqp091.Delivery) {
+					l.processMessage(ctx, message)
+					message.Acknowledger.Ack(message.DeliveryTag, false)
+				}(message)
 			}
 		}(queue)
 	}
@@ -121,6 +124,7 @@ func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delive
 	handlers, ok := l.handlers[message.Type]
 	if !ok {
 		l.logger.Warnf("ignoring message due to no handler registered, message type %s", message.Type)
+		return
 	}
 	messageMapped, err := mappers.MapAmqpToMessage(message)
 	if err != nil {
