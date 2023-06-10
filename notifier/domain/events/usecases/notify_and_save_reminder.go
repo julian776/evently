@@ -39,7 +39,11 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 
 	dateToSend, err := time.Parse("02/01/2006", event.StartDate)
 	if err != nil {
-		return err
+		dateToSend, err = time.Parse(time.RFC3339, event.StartDate)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	reminder := rModels.Reminder{

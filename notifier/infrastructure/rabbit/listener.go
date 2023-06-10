@@ -8,7 +8,6 @@ import (
 	"notifier/infrastructure/rabbit/mappers"
 	"notifier/pkgs/logger"
 
-	"github.com/rabbitmq/amqp091-go"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -102,7 +101,7 @@ func (l *RabbitListener) Listen(
 			}
 
 			for message := range cMessages {
-				go func(message amqp091.Delivery) {
+				go func(message amqp.Delivery) {
 					l.processMessage(ctx, message)
 				}(message)
 			}
