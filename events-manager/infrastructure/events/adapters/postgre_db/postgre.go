@@ -91,6 +91,7 @@ endTime FROM events WHERE id=$1`
 			Location:       location,
 			OrganizerName:  organizerName,
 			OrganizerEmail: organizerEmail,
+			Attendees:      attendees,
 			StartDate:      startDate,
 			EndDate:        endDate,
 			StartTime:      startTime,
