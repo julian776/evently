@@ -32,7 +32,7 @@ func (u *CreateEventUseCase) Execute(ctx context.Context, event models.Event) (m
 	err = u.publisher.PublishMessageWithContext(
 		ctx,
 		u.eventsSettings.Queue,
-		eventCreated,
+		map[string]any{"event": eventCreated},
 		types.EVENT_CREATED,
 	)
 	if err != nil {

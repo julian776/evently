@@ -2,6 +2,8 @@
 
 configs.json
 
+/temp/
+/tmp/
 /public
 resources/
 node_modules/

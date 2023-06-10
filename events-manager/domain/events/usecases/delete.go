@@ -21,7 +21,7 @@ type DeleteEventByIdUseCase struct {
 // If any error occurs during the process, it logs
 // the error and returns an empty event and the error.
 func (u *DeleteEventByIdUseCase) Execute(ctx context.Context, id string) (models.Event, error) {
-	eventCreated, err := u.eventsRepository.DeleteEventById(ctx, id)
+	eventDeleted, err := u.eventsRepository.DeleteEventById(ctx, id)
 	if err != nil {
 		u.logger.Errorf("error deleting event %s", err.Error())
 		return models.Event{}, err
@@ -30,7 +30,7 @@ func (u *DeleteEventByIdUseCase) Execute(ctx context.Context, id string) (models
 	err = u.publisher.PublishMessageWithContext(
 		ctx,
 		u.eventsSettings.Queue,
-		eventCreated,
+		map[string]any{"event": eventDeleted},
 		types.EVENT_DELETED,
 	)
 	if err != nil {
@@ -38,7 +38,7 @@ func (u *DeleteEventByIdUseCase) Execute(ctx context.Context, id string) (models
 		return models.Event{}, err
 	}
 
-	return eventCreated, nil
+	return eventDeleted, nil
 }
 
 func NewDeleteEventByIdUseCase(

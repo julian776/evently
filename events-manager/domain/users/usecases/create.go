@@ -20,7 +20,7 @@ type CreateUserUseCase struct {
 // If any error occurs during the process, it logs
 // the error and returns an empty user and the error.
 func (u *CreateUserUseCase) Execute(ctx context.Context, user models.User) (models.User, error) {
-	eventCreated, err := u.usersRepository.CreateUser(ctx, user)
+	userCreated, err := u.usersRepository.CreateUser(ctx, user)
 	if err != nil {
 		u.logger.Errorf("Error creating user %s", err.Error())
 		return models.User{}, err
@@ -29,7 +29,7 @@ func (u *CreateUserUseCase) Execute(ctx context.Context, user models.User) (mode
 	err = u.publisher.PublishMessageWithContext(
 		ctx,
 		u.userSettings.Queue,
-		eventCreated,
+		map[string]any{"user": userCreated},
 		models.USER_CREATED,
 	)
 	if err != nil {
@@ -37,7 +37,7 @@ func (u *CreateUserUseCase) Execute(ctx context.Context, user models.User) (mode
 		return models.User{}, err
 	}
 
-	return eventCreated, nil
+	return userCreated, nil
 }
 
 func NewCreateEventUseCase(

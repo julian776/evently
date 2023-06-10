@@ -30,7 +30,10 @@ func (u *AddAttendeeEventUseCase) Execute(ctx context.Context, addAttendeDTO dto
 	err = u.publisher.PublishMessageWithContext(
 		ctx,
 		u.eventsSettings.Queue,
-		attendees,
+		map[string]any{
+			"eventId":  addAttendeDTO.EventId,
+			"attendee": addAttendeDTO.AttendeeEmail,
+		},
 		types.ADDED_ATTENDEE,
 	)
 	if err != nil {

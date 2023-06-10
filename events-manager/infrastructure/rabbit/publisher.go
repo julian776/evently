@@ -2,7 +2,6 @@ package rabbit
 
 import (
 	"context"
-	"events-manager/domain/broker/models"
 	"events-manager/infrastructure/rabbit/mappers"
 	"events-manager/pkgs/logger"
 	"fmt"
@@ -28,6 +27,8 @@ func (c *RabbitPublisher) Stop() {
 	c.Ch.Close()
 }
 
+// Returns a new `RabbitPublisher` instance
+// with the connection and channel set up.
 func NewRabbitPublisher(
 	logger logger.Logger,
 	settings Settings,
@@ -66,10 +67,14 @@ func (c *RabbitPublisher) QueueDeclare(queueName string) error {
 	return nil
 }
 
+// Publishes a message to a specified queue in RabbitMQ.
+// It maps the message to a byte array using the
+// `mappers.MapStructToMessage` function and then publishes
+// the message.
 func (c *RabbitPublisher) PublishMessageWithContext(
 	ctx context.Context,
 	queueName string,
-	message any,
+	message map[string]any,
 	typeMessage string,
 ) error {
 	bodyToPublish, err := mappers.MapStructToMessage(message, typeMessage)
@@ -85,21 +90,4 @@ func (c *RabbitPublisher) PublishMessageWithContext(
 		bodyToPublish,
 	)
 	return err
-}
-
-// Never used (Practicing) TODO: Delete
-func (c *RabbitPublisher) ListenMessages(
-	ctx context.Context,
-	queueName string,
-) chan<- models.Message {
-	cMessages := make(chan models.Message)
-	go func() {
-		for message := range cMessages {
-			err := c.PublishMessageWithContext(ctx, queueName, message, "")
-			if err != nil {
-				c.logger.Errorf("error sending message %s", message)
-			}
-		}
-	}()
-	return cMessages
 }

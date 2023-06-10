@@ -9,7 +9,7 @@ type BrokerPublisher interface {
 	PublishMessageWithContext(
 		ctx context.Context,
 		queueName string,
-		message interface{},
+		message map[string]any,
 		typeMessage string,
 	) error
 	Stop()

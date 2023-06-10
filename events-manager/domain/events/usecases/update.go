@@ -29,7 +29,7 @@ func (u *UpdateEventUseCase) Execute(ctx context.Context, event models.Event) (m
 
 	err = u.publisher.PublishMessageWithContext(
 		ctx, u.eventsSettings.Queue,
-		eventUpdated,
+		map[string]any{"event": eventUpdated},
 		types.EVENT_UPDATED,
 	)
 	if err != nil {

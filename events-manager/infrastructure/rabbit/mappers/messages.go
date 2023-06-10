@@ -9,7 +9,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func MapStructToMessage(structPayload any, typeMessage string) (amqp.Publishing, error) {
+func MapStructToMessage(structPayload map[string]any, typeMessage string) (amqp.Publishing, error) {
 	bodyBytes, err := json.Marshal(structPayload)
 	if err != nil {
 		return amqp.Publishing{}, err
