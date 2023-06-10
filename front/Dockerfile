@@ -1,5 +1,5 @@
 # Stage 1
-FROM node
+FROM node:18.10
 
 WORKDIR /app
 

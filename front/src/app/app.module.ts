@@ -19,7 +19,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UserModule } from './user/user.module';
 import { HomeComponent } from './home/home.component';
-
+import {MatExpansionModule} from '@angular/material/expansion';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +43,8 @@ import { HomeComponent } from './home/home.component';
     BrowserAnimationsModule,
     MatFormFieldModule,
     ScrollingModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

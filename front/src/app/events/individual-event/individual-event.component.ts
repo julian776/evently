@@ -14,7 +14,10 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./individual-event.component.scss', '../../app.component.scss'],
 })
 export class IndividualEventComponent {
+  public user$ = this.store.select((state) => state.user);
   public event!: Event;
+  private id = this.route.snapshot.paramMap.get('id');
+  panelOpenState = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,14 +25,16 @@ export class IndividualEventComponent {
     private http: HttpClient,
     private store: Store<State>,
     public snackBar: MatSnackBar
-    ) {}
+  ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-
     this.http
-      .get<Event>(`${environment.apiUrl}/events/${id}`, { observe: 'body' })
+      .get<Event>(`${environment.apiUrl}/events/${this.id}`, {
+        observe: 'body',
+      })
       .subscribe((val: Event) => {
+        console.log(val);
+        
         this.event = val;
       });
   }
@@ -52,5 +57,25 @@ export class IndividualEventComponent {
       });
   }
 
-  handleAddAttendee(eventId: string) {}
+  handleAddAttendee(eventId: string) {
+    this.user$.subscribe((userState) => {
+      if (!userState.isLoggedIn) {
+        this.snackBar.open('Please login before try yo register', '', {
+          duration: 2000,
+        });
+        return
+      }
+      this.http
+          .put<string[]>(`${environment.apiUrl}/events/attendees`, {
+            eventId: this.id,
+            attendeeEmail: userState.user.email,
+          })
+          .subscribe(() => {
+            //this.store.dispatch(delEvent({ id: eventId }));
+            this.snackBar.open('You have registered succesfully', '', {
+              duration: 2000,
+            });
+          });
+    });
+  }
 }
