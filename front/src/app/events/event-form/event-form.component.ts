@@ -14,7 +14,7 @@ import { UserState } from 'src/app/reducers/user/user..reducer';
 import { User } from 'src/app/user/models/user';
 import { State } from 'src/app/reducers';
 import { environment } from '../../../environments/environment';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-event-form',
@@ -31,10 +31,11 @@ export class EventFormComponent {
     private router: Router,
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private store: Store<State>
+    private store: Store<State>,
+    public snackBar: MatSnackBar
   ) {
-    const today = new Date()
-    this.minDate = new Date(today.getFullYear(), today.getMonth())
+    const today = new Date();
+    this.minDate = new Date(today.getFullYear(), today.getMonth());
   }
 
   ngOnInit() {
@@ -57,6 +58,8 @@ export class EventFormComponent {
       .get<Event>(`${environment.apiUrl}/events/${id}`, { observe: 'body' })
       .subscribe((event: Event) => {
         this.initializeForm(event);
+        console.log(event);
+
       });
   }
 
@@ -87,9 +90,9 @@ export class EventFormComponent {
       title: [title, Validators.required],
       description: [description, Validators.required],
       location: [location, Validators.required],
-      cost: [cost, Validators.required],
-      startDate: new FormControl(startDate, Validators.required),
-      endDate: new FormControl(endDate, Validators.required),
+      cost: [cost, [Validators.required, Validators.min(0)]],
+      startDate: new FormControl(new Date(startDate), Validators.required),
+      endDate: new FormControl(new Date(endDate), Validators.required),
       startTime: [
         startTime,
         [Validators.required, Validators.max(24), Validators.min(0)],
@@ -106,18 +109,19 @@ export class EventFormComponent {
       return;
     }
 
-    console.log('EVENT:' , this.eventForm.value);
-
-
     const id = this.route.snapshot.paramMap.get('id');
-    const event = this.addOrganizerInfoToEvent(this.eventForm.value);
+    const event = this.addIdAndOrganizerInfoToEvent(id, this.eventForm.value);
+    console.log("Sending: ", event);
     // Create new one
     if (id == '0') {
       this.http
         .post<Event>(`${environment.apiUrl}/events`, event)
         .subscribe((event: Event) => {
-          console.log(event);
           this.store.dispatch(addEvent({ event }));
+          this.snackBar.open('Event created', '', {
+            duration: 2000,
+          });
+          this.router.navigate(['/events']).catch(() => {});
         });
       return;
     }
@@ -126,16 +130,23 @@ export class EventFormComponent {
     this.http
       .put<Event>(`${environment.apiUrl}/events`, event)
       .subscribe((event: Event) => {
-        console.log(event);
         this.store.dispatch(updateEvent({ event }));
+        this.snackBar.open('Event updated', '', {
+          duration: 2000,
+        });
+        this.router.navigate(['/events']).catch(() => {});
       });
   }
 
-  addOrganizerInfoToEvent(event: Event): Event {
-    return {
+  addIdAndOrganizerInfoToEvent(id: string | null, event: Event): Event {
+    const eventUpdated = {
       ...event,
       organizerEmail: this.user.email,
       organizerName: this.user.name,
     };
+    if (id !== '0' && id !== null) {
+      eventUpdated.id = id
+    }
+    return eventUpdated
   }
 }
