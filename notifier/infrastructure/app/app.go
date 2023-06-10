@@ -19,7 +19,8 @@ type App struct {
 	RemindersRepository reminders.RemindersRepository
 
 	//------ UseCases-------
-	NotifyAndSaveReminderUseCase *events.NotifyAndSaveReminderUseCase
+	NotifyAndSaveReminderUseCase              *events.NotifyAndSaveReminderUseCase
+	NotifyNewAttendeeAndUpdateReminderUseCase *events.NotifyNewAttendeeAndUpdateReminderUseCase
 	//------ End UseCases-------
 
 }
@@ -30,6 +31,7 @@ func NewApp(
 	listener listener.Listener,
 	remindersRepository reminders.RemindersRepository,
 	notifyAndSaveReminderUseCase *events.NotifyAndSaveReminderUseCase,
+	notifyNewAttendeeAndUpdateReminderUseCase *events.NotifyNewAttendeeAndUpdateReminderUseCase,
 ) *App {
 	return &App{
 		logger,
@@ -37,6 +39,7 @@ func NewApp(
 		listener,
 		remindersRepository,
 		notifyAndSaveReminderUseCase,
+		notifyNewAttendeeAndUpdateReminderUseCase,
 	}
 }
 

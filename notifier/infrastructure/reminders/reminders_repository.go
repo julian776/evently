@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mitchellh/mapstructure"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -58,6 +59,17 @@ func (r *RemindersMongoRepository) GetAllTodayReminders(ctx context.Context) ([]
 	return []models.Reminder{}, nil
 }
 func (r *RemindersMongoRepository) AddNewEmailToReminderWithEventId(ctx context.Context, eventId string, email string) error {
+	_, err := r.coll.UpdateOne(
+		ctx,
+		bson.M{
+			"eventid": eventId,
+		},
+		bson.M{
+			"$push": bson.M{"emailstonotify": bson.A{email}},
+		})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

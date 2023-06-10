@@ -104,7 +104,6 @@ func (l *RabbitListener) Listen(
 			for message := range cMessages {
 				go func(message amqp091.Delivery) {
 					l.processMessage(ctx, message)
-					message.Acknowledger.Ack(message.DeliveryTag, false)
 				}(message)
 			}
 		}(queue)
@@ -123,7 +122,7 @@ func (l *RabbitListener) Listen(
 func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delivery) {
 	handlers, ok := l.handlers[message.Type]
 	if !ok {
-		l.logger.Warnf("ignoring message due to no handler registered, message type %s", message.Type)
+		l.logger.Warnf("ignoring message due to no handler registered, message type [%s]", message.Type)
 		return
 	}
 	messageMapped, err := mappers.MapAmqpToMessage(message)
@@ -134,7 +133,7 @@ func (l *RabbitListener) processMessage(ctx context.Context, message amqp.Delive
 	for _, handler := range handlers {
 		err := handler(ctx, messageMapped)
 		if err != nil {
-			l.logger.Errorf("error in handler when processing message %s", err.Error())
+			l.logger.Errorf("error in handler for type [%s] when processing message %s", message.Type, err.Error())
 			message.Acknowledger.Nack(message.DeliveryTag, false, false)
 		}
 	}

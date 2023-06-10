@@ -2,7 +2,6 @@ package events
 
 import (
 	"context"
-	"fmt"
 	"notifier/domain/listener"
 	reminders "notifier/domain/reminders/repositories"
 	"notifier/pkgs/emails"
@@ -25,7 +24,7 @@ func (u *NotifyNewAttendeeAndUpdateReminderUseCase) Execute(
 		Email:    u.emailsSettings.Email,
 		Password: u.emailsSettings.Password,
 	}
-	message := []byte(fmt.Sprintf("Evently\n\nYou registered succesfully to the event\n\n%s"))
+	message := []byte("Evently\n\nYou registered succesfully to the event")
 
 	err := emails.SendEmail(
 		ctx,
