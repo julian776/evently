@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Event } from '../models/event';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/reducers';
 import { delEvent } from 'src/app/reducers/events/events.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environments/environment';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-individual-event',
@@ -34,7 +35,7 @@ export class IndividualEventComponent {
       })
       .subscribe((val: Event) => {
         console.log(val);
-        
+
         this.event = val;
       });
   }
@@ -70,6 +71,14 @@ export class IndividualEventComponent {
             eventId: this.id,
             attendeeEmail: userState.user.email,
           })
+          .pipe(catchError((error: HttpErrorResponse) => {
+            if (error.status == 409) {
+              this.snackBar.open('You already are registered', '', {
+                duration: 2000,
+              });
+            }
+            return throwError(() => new Error())
+          }))
           .subscribe(() => {
             //this.store.dispatch(delEvent({ id: eventId }));
             this.snackBar.open('You have registered succesfully', '', {
