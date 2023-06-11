@@ -5,11 +5,13 @@ import (
 	"database/sql"
 	"events-manager/domain/events/models"
 	configs "events-manager/infrastructure/configs/postgres"
+	"events-manager/infrastructure/events/adapters/errors"
 	"events-manager/pkgs/logger"
 	"fmt"
 
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
+	"golang.org/x/exp/slices"
 )
 
 type PostgreEventsRepository struct {
@@ -228,12 +230,20 @@ func (r *PostgreEventsRepository) AddAttendeToEventById(
 	id string,
 	attendeeEmail string,
 ) ([]string, error) {
+	event, err := r.GetEventById(ctx, id)
+	if err != nil {
+		return []string{}, err
+	}
+	if slices.Contains(event.Attendees, attendeeEmail) {
+		return event.Attendees, &errors.DuplicateAttendee{Message: "Attendee already is registered"}
+	}
+
 	query := `UPDATE events SET
 attendees = array_append(attendees, $2)
 WHERE id=$1 RETURNING attendees;`
 
 	var attendees []string
-	err := r.db.QueryRowContext(
+	err = r.db.QueryRowContext(
 		ctx,
 		query,
 		id,

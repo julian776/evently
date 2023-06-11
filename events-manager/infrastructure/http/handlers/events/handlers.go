@@ -4,6 +4,7 @@ import (
 	"events-manager/domain/events/dtos"
 	"events-manager/domain/events/models"
 	events "events-manager/domain/events/usecases"
+	"events-manager/infrastructure/events/adapters/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -115,6 +116,14 @@ func addAttendeeEvent(
 		}
 		event, err := addAttendeeEventUseCase.Execute(c, json)
 		if err != nil {
+			if v, ok := err.(*errors.DuplicateAttendee); ok {
+				c.JSON(409, gin.H{
+					"error": gin.H{
+						"message": v.Error(),
+					},
+				})
+				return
+			}
 			c.JSON(500, gin.H{
 				"error": gin.H{
 					"message": "can not create an event",
