@@ -4,34 +4,30 @@ tags: ["test","docs"]
 title: "Getting Started"
 linkTitle: "Getting Started"
 weight: 2
-description: >
-  What does your user need to know to try your project?
 ---
 
-{{% pageinfo %}}
-This is a placeholder page that shows you how to use this template site.
-{{% /pageinfo %}}
+## Install and setup
+* First, you have to clone the repository of [Evently](https://github.com/julian776/evently/tree/main).
 
-Information in this section helps your user try your project themselves.
+> `git clone https://github.com/julian776/evently.git`
 
-* What do your users need to do to start using your project? This could include downloading/installation instructions, including any prerequisites or system requirements.
+* Then you you have to create each .env file(Front, Events Manager and Notifier). 
+For local development, you can copy the .env.template, and will be enough except for the email service variables in the notifier microservice.
+Check how to generate a password for Gmail [here](https://support.google.com/mail/answer/185833?hl=en).
 
-* Introductory “Hello World” example, if appropriate. More complex tutorials should live in the Tutorials section.
+## Create .env Files:
 
-Consider using the headings below for your getting started page. You can delete any that are not applicable to your project.
+* After cloning the repository, you need to create three separate .env files. These files are used to store environment variables that configure the application.
+* The .env files are required for the Front-end, Events Manager, and Notifier microservices.
+* For local development, you can start by copying the provided .env.template file and customizing it as needed.
+* It's mentioned that you may need to modify the email service variables in the Notifier microservice .env file. The instructions provide a link to learn how to generate a password for Gmail if you plan to use Gmail as your email service.
 
-## Prerequisites
+## Running with Docker (optional):
 
-Are there any system requirements for using your project? What languages are supported (if any)? Do users need to already have any software or tools installed?
+* If you have Docker installed, you can use the Docker Compose file provided in the root directory of the project.
+* It will create and run all the necessary services and databases for the Evently project.
 
-## Installation
+## Running Services Individually:
 
-Where can your user find your project code? How can they install it (binaries, installable package, build from source)? Are there multiple options/versions they can install and how should they choose the right one for them?
-
-## Setup
-
-Is there any initial setup users need to do after installation to try your project?
-
-## Try it out!
-
-Can your users test their installation, for example by running a command or deploying a Hello World example?
+* If you don't have Docker or choose not to use it, you can run each service individually.
+* This means you would need to start each component of the project separately, such as the Front-end, Events Manager, and Notifier microservices.

@@ -9,16 +9,19 @@ menu:
 ---
 
 {{% pageinfo %}}
-This is a placeholder page that shows you how to use this template site.
+This project is part of a tech challenge to become tech team lead.
+
+It was done in a short period of time and made use of new technologies that I try to learn and implement as well as I can over the challenge.
 {{% /pageinfo %}}
 
+Evently is composed of three microservices.
+The events manager, a notifier, and the front end.
 
-This section is where the user documentation for your project lives - all the information your users need to understand and successfully use your project. 
+The front is made with angular and the other two microservices with Golang.
 
-For large documentation sets we recommend adding content under the headings in this section, though if some or all of them don’t apply to your project feel free to remove them or add your own. You can see an example of a smaller Docsy documentation site in the [Docsy User Guide](https://docsy.dev/docs/), which lives in the [Docsy theme repo](https://github.com/google/docsy/tree/master/userguide) if you'd like to copy its docs section. 
+This website is created with Hugo. And more specific with the template DOCSY.
+Check the [Docsy User Guide](https://docsy.dev/docs/), which lives in the [Docsy theme repo](https://github.com/google/docsy/tree/master/userguide).
 
-Other content such as marketing material, case studies, and community updates should live in the [About](/about/) and [Community](/community/) pages.
-
-Find out how to use the Docsy theme in the [Docsy User Guide](https://docsy.dev/docs/). You can learn more about how to organize your documentation (and how we organized this site) in [Organizing Your Content](https://docsy.dev/docs/best-practices/organizing-content/).
-
+Overall the application, I try to make use of the dependency inversion principle as the same as other concepts from clean architecture like repositories, adapters, and use cases.
+As the same as clean code concepts. 
 
