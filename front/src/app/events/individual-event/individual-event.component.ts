@@ -34,9 +34,7 @@ export class IndividualEventComponent {
         observe: 'body',
       })
       .subscribe((val: Event) => {
-        console.log(val);
-
-        this.event = val;
+        this.event = this.formatEventDates(val);
       });
   }
 
@@ -86,5 +84,15 @@ export class IndividualEventComponent {
             });
           });
     });
+  }
+
+  formatEventDates(event: Event) {
+    const start = new Date(event.startDate)
+    const end = new Date(event.endDate)
+    return {
+      ...event,
+      startDate: `${start.getFullYear()}/${start.getMonth()}/${start.getDay()}`,
+      endDate: `${end.getFullYear()}/${end.getMonth()}/${end.getDay()}`,
+    }
   }
 }
