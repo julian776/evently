@@ -5,6 +5,7 @@ import (
 	"events-manager/domain/events/models"
 )
 
+//go:generate mockery --name=EventsRepository
 type EventsRepository interface {
 	GetEventById(ctx context.Context, id string) (models.Event, error)
 	GetAllEvents(ctx context.Context) ([]models.Event, error)

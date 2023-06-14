@@ -8,7 +8,6 @@ import (
 	"events-manager/domain/events/repositories"
 	"events-manager/infrastructure/events"
 	"events-manager/pkgs/logger"
-	"fmt"
 )
 
 type CreateEventUseCase struct {
@@ -28,7 +27,6 @@ func (u *CreateEventUseCase) Execute(ctx context.Context, event models.Event) (m
 		return models.Event{}, err
 	}
 
-	fmt.Println(eventCreated)
 	err = u.publisher.PublishMessageWithContext(
 		ctx,
 		u.eventsSettings.Queue,

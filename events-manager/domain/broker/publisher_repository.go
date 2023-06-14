@@ -4,6 +4,7 @@ import (
 	"context"
 )
 
+//go:generate mockery --name=BrokerPublisher
 type BrokerPublisher interface {
 	QueueDeclare(queueName string) error
 	PublishMessageWithContext(

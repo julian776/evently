@@ -5,6 +5,7 @@ import (
 	"events-manager/domain/users/models"
 )
 
+//go:generate mockery --name=UsersRepository
 type UsersRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (models.User, error)
 	CreateUser(ctx context.Context, user models.User) (models.User, error)
