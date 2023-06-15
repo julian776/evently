@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Event } from '../models/event';
 import { Store } from '@ngrx/store';
@@ -78,7 +78,6 @@ export class IndividualEventComponent {
             return throwError(() => new Error())
           }))
           .subscribe(() => {
-            //this.store.dispatch(delEvent({ id: eventId }));
             this.snackBar.open('You have registered succesfully', '', {
               duration: 2000,
             });

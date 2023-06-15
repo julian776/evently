@@ -2,6 +2,8 @@
 
 configs.json
 
+.scannerwork
+
 **/temp/
 **/tmp/
 /public

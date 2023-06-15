@@ -1,3 +1,0 @@
-package mappers
-
-func MapMessageToEvent() {}

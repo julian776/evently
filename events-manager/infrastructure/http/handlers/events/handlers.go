@@ -40,7 +40,7 @@ func getAllEvents(
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": gin.H{
-					"message": "can not retreive event",
+					"message": "can not retreive events",
 				},
 			})
 			return
@@ -96,7 +96,7 @@ func updateEvent(
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": gin.H{
-					"message": "can not create an event",
+					"message": "can not update event",
 				},
 			})
 			return
@@ -126,7 +126,7 @@ func addAttendeeEvent(
 			}
 			c.JSON(500, gin.H{
 				"error": gin.H{
-					"message": "can not create an event",
+					"message": "can not add attendee to event",
 				},
 			})
 			return

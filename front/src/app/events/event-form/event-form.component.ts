@@ -10,7 +10,6 @@ import { Event } from '../models/event';
 import { Store } from '@ngrx/store';
 import { addEvent, updateEvent } from 'src/app/reducers/events/events.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserState } from 'src/app/reducers/user/user..reducer';
 import { User } from 'src/app/user/models/user';
 import { State } from 'src/app/reducers';
 import { environment } from '../../../environments/environment';
