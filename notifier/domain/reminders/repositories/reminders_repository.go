@@ -5,6 +5,7 @@ import (
 	"notifier/domain/reminders/models"
 )
 
+//go:generate mockery --name=RemindersRepository
 type RemindersRepository interface {
 	CreateReminder(
 		ctx context.Context,

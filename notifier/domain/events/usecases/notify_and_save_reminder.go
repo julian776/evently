@@ -21,29 +21,12 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 	ctx context.Context,
 	event models.Event,
 ) error {
-	auth := emails.Auth{
-		Email:    u.emailsSettings.Email,
-		Password: u.emailsSettings.Password,
-	}
-	message := []byte(fmt.Sprintf("Evently\n\nYour new event was succesfully created\n\n%s", event.Title))
-
-	err := emails.SendEmail(
-		ctx,
-		auth,
-		[]string{event.OrganizerEmail},
-		message,
-	)
-	if err != nil {
-		return err
-	}
-
 	dateToSend, err := time.Parse("02/01/2006", event.StartDate)
 	if err != nil {
 		dateToSend, err = time.Parse(time.RFC3339, event.StartDate)
 		if err != nil {
 			return err
 		}
-
 	}
 
 	reminder := rModels.Reminder{
@@ -54,6 +37,22 @@ func (u *NotifyAndSaveReminderUseCase) Execute(
 	}
 
 	_, err = u.remindersRepository.CreateReminder(ctx, reminder)
+	if err != nil {
+		return err
+	}
+
+	auth := emails.Auth{
+		Email:    u.emailsSettings.Email,
+		Password: u.emailsSettings.Password,
+	}
+	message := []byte(fmt.Sprintf("Evently\n\nYour new event was succesfully created\n\n%s", event.Title))
+
+	err = emails.SendEmail(
+		ctx,
+		auth,
+		[]string{event.OrganizerEmail},
+		message,
+	)
 	if err != nil {
 		return err
 	}
