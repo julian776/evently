@@ -15,43 +15,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type fields struct {
+	logger           logger.Logger
+	publisher        broker.BrokerPublisher
+	eventsRepository repositories.EventsRepository
+	eventsSettings   events.EventsSettings
+}
+
+type args struct {
+	ctx   context.Context
+	event models.Event
+}
+
 func TestCreateEventUseCase_Execute(t *testing.T) {
 	assert := assert.New(t)
 
-	mockBroker := &brokerMocks.BrokerPublisher{}
-	mockBroker.On(
-		"PublishMessageWithContext",
-		context.Background(),
-		"",
-		map[string]any{"event": models.Event{}},
-		"notifier.events.created",
-	).Return(nil)
-
-	mockRepo := &mocks.EventsRepository{}
-	mockRepo.On(
-		"CreateEvent",
-		context.Background(),
-		models.Event{},
-	).Return(models.Event{}, nil)
-	mockRepo.On(
-		"CreateEvent",
-		context.Background(),
-		models.Event{Cost: -2.0},
-	).Return(models.Event{}, fmt.Errorf("error in use case"))
+	mockRepo, mockBroker := setUpMocks()
 
 	log := logger.NewLogger(logger.Settings{})
-
-	type fields struct {
-		logger           logger.Logger
-		publisher        broker.BrokerPublisher
-		eventsRepository repositories.EventsRepository
-		eventsSettings   events.EventsSettings
-	}
-
-	type args struct {
-		ctx   context.Context
-		event models.Event
-	}
 
 	tests := []struct {
 		name    string
@@ -90,6 +71,21 @@ func TestCreateEventUseCase_Execute(t *testing.T) {
 			wantErr: true,
 			want:    models.Event{},
 		},
+		{
+			name: "should fail with error from publisher",
+			fields: fields{
+				logger:           log,
+				eventsRepository: mockRepo,
+				eventsSettings:   events.EventsSettings{},
+				publisher:        mockBroker,
+			},
+			args: args{
+				context.Background(),
+				models.Event{Id: "2"},
+			},
+			wantErr: true,
+			want:    models.Event{},
+		},
 	}
 
 	for _, tt := range tests {
@@ -109,6 +105,44 @@ func TestCreateEventUseCase_Execute(t *testing.T) {
 		})
 	}
 
-	mockBroker.AssertNumberOfCalls(t, "PublishMessageWithContext", 1)
-	mockRepo.AssertNumberOfCalls(t, "CreateEvent", 2)
+	mockBroker.AssertNumberOfCalls(t, "PublishMessageWithContext", 2)
+	mockRepo.AssertNumberOfCalls(t, "CreateEvent", 3)
+}
+
+func setUpMocks() (*mocks.EventsRepository, *brokerMocks.BrokerPublisher) {
+	mockBroker := &brokerMocks.BrokerPublisher{}
+	mockBroker.On(
+		"PublishMessageWithContext",
+		context.Background(),
+		"",
+		map[string]any{"event": models.Event{}},
+		"notifier.events.created",
+	).Return(nil)
+	mockBroker.On(
+		"PublishMessageWithContext",
+		context.Background(),
+		"",
+		map[string]any{"event": models.Event{Id: "2"}},
+		"notifier.events.created",
+	).Return(fmt.Errorf("Error"))
+
+	// ----- REPO ------
+	mockRepo := &mocks.EventsRepository{}
+	mockRepo.On(
+		"CreateEvent",
+		context.Background(),
+		models.Event{},
+	).Return(models.Event{}, nil)
+	mockRepo.On(
+		"CreateEvent",
+		context.Background(),
+		models.Event{Id: "2"},
+	).Return(models.Event{Id: "2"}, nil)
+	mockRepo.On(
+		"CreateEvent",
+		context.Background(),
+		models.Event{Cost: -2.0},
+	).Return(models.Event{}, fmt.Errorf("error in repo"))
+
+	return mockRepo, mockBroker
 }
