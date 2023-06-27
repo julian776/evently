@@ -31,7 +31,6 @@ func SetHandlers(a *app.App) {
 	a.Listener.AddMessageHandler(
 		events.ADDED_ATTENDEE,
 		func(ctx context.Context, message models.Message) error {
-			fmt.Println("Message: ", message.Body)
 			return a.NotifyNewAttendeeAndUpdateReminderUseCase.Execute(
 				ctx,
 				message.Body["eventId"].(string),

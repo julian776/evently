@@ -19,13 +19,11 @@ type PostgreEventsRepository struct {
 }
 
 func NewPostgreEventsRepository(l logger.Logger, settings configs.PostgreSettigs) *PostgreEventsRepository {
-	fmt.Println(settings)
 	db, err := sql.Open("postgres", createConnToString(settings))
 	if err != nil {
 		l.Errorf("Error connecting [PostgreEventsRepository] to the DB: %s\n", err.Error())
 	}
 
-	// check if we can ping our DB
 	err = db.Ping()
 	if err != nil {
 		l.Errorf("Error [PostgreEventsRepository] could not ping database: %s\n", err.Error())
@@ -270,7 +268,6 @@ func (r *PostgreEventsRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	fmt.Println("event: ", event.Cost)
 	query := `UPDATE events SET
 title=$1, 
 description=$2, 

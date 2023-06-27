@@ -16,7 +16,6 @@ type PostgreUsersRepository struct {
 }
 
 func NewPostgreUsersRepository(l logger.Logger, settings configs.PostgreSettigs) *PostgreUsersRepository {
-	fmt.Println(settings)
 	db, err := sql.Open("postgres", createConnToString(settings))
 	if err != nil {
 		l.Errorf("Error connecting [PostgreUsersRepository] to the DB: %s\n", err.Error())
