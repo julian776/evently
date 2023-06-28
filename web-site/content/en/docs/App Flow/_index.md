@@ -1,6 +1,6 @@
 ---
-title: "Architecture"
-linkTitle: "Architecture"
+title: "App Flow"
+linkTitle: "App Flow"
 weight: 1
 resources:
   - src: "**.{png,jpg}"
