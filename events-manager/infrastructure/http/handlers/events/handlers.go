@@ -4,7 +4,7 @@ import (
 	"events-manager/domain/events/dtos"
 	"events-manager/domain/events/models"
 	events "events-manager/domain/events/usecases"
-	"events-manager/infrastructure/events/adapters/errors"
+	"events-manager/infrastructure/events/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

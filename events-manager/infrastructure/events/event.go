@@ -1,11 +1,13 @@
-package models
+package events
 
 import (
-	"time"
+	"github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
-type Event struct {
-	Id string `json:"id,omitempty"`
+// For db interactions only
+type event struct {
+	gorm.Model
 
 	Title string `json:"title,omitempty" binding:"required"`
 
@@ -15,7 +17,7 @@ type Event struct {
 
 	Location string `json:"location,omitempty" binding:"required"`
 
-	Attendees []string `json:"attendees,omitempty"`
+	Attendees pq.StringArray `json:"attendees,omitempty" gorm:"type:text[]"`
 
 	OrganizerName string `json:"organizerName,omitempty" binding:"required"`
 
@@ -28,8 +30,4 @@ type Event struct {
 	StartTime string `json:"startTime,omitempty" binding:"required"`
 
 	EndTime string `json:"endTime,omitempty" binding:"required"`
-
-	CreatedAt time.Time `json:"createdAt,omitempty"`
-
-	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 }

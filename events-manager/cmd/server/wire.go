@@ -10,7 +10,7 @@ import (
 	usersRepo "events-manager/domain/users/repositories"
 	users "events-manager/domain/users/usecases"
 	"events-manager/infrastructure/app"
-	eventspostgredb "events-manager/infrastructure/events/adapters/postgre_db"
+	eventspostgredb "events-manager/infrastructure/events"
 	client "events-manager/infrastructure/http/client"
 	server "events-manager/infrastructure/http/server"
 	"events-manager/infrastructure/rabbit"
