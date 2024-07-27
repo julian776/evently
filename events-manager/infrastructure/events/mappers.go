@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func MapEventToPostgresEvent(e models.Event) *event {
+func mapEventToPostgresEvent(e models.Event) *event {
 	return &event{
 		Title:          e.Title,
 		Description:    e.Description,
@@ -21,7 +21,7 @@ func MapEventToPostgresEvent(e models.Event) *event {
 	}
 }
 
-func MapPostgresEventToEvent(e event) *models.Event {
+func mapPostgresEventToEvent(e event) *models.Event {
 	return &models.Event{
 		Id:             fmt.Sprint(e.ID),
 		Title:          e.Title,

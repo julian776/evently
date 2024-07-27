@@ -34,8 +34,20 @@ func (r *PostgreEventsRepository) GetEventById(
 	ctx context.Context,
 	id string,
 ) (models.Event, error) {
-	var event models.Event
-	r.db.Where("id = ?", id).First(&event)
+	var event event
+	r.db.WithContext(ctx).Where("id = ?", id).First(&event)
+
+	return *mapPostgresEventToEvent(event), nil
+}
+
+// This function is used internally to get the event by id
+// without mapping it to the domain model
+func (r *PostgreEventsRepository) getEventByIdInternal(
+	ctx context.Context,
+	id string,
+) (event, error) {
+	var event event
+	r.db.WithContext(ctx).Where("id = ?", id).First(&event)
 
 	return event, nil
 }
@@ -44,11 +56,11 @@ func (r *PostgreEventsRepository) GetAllEvents(
 	ctx context.Context,
 ) ([]models.Event, error) {
 	var events []event
-	r.db.Find(&events)
+	r.db.WithContext(ctx).Find(&events)
 
 	mappedEvents := make([]models.Event, len(events))
 	for i, event := range events {
-		mappedEvents[i] = *MapPostgresEventToEvent(event)
+		mappedEvents[i] = *mapPostgresEventToEvent(event)
 	}
 
 	return mappedEvents, nil
@@ -58,7 +70,7 @@ func (r *PostgreEventsRepository) CreateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	postgresEvent := MapEventToPostgresEvent(event)
+	postgresEvent := mapEventToPostgresEvent(event)
 	r.db.WithContext(ctx).Create(postgresEvent)
 
 	event.Id = fmt.Sprint(postgresEvent.ID)
@@ -71,16 +83,19 @@ func (r *PostgreEventsRepository) AddAttendeToEventById(
 	id string,
 	attendeeEmail string,
 ) ([]string, error) {
-	event, err := r.GetEventById(ctx, id)
+	event, err := r.getEventByIdInternal(ctx, id)
 	if err != nil {
 		return []string{}, err
 	}
 	if slices.Contains(event.Attendees, attendeeEmail) {
-		return event.Attendees, &errors.DuplicateAttendee{Message: "Attendee already is registered"}
+		return event.Attendees, errors.NewDuplicateAttendeeError()
 	}
 
 	event.Attendees = append(event.Attendees, attendeeEmail)
-	r.db.UpdateColumn("attendees", &event)
+	r.db.WithContext(ctx).Model(&event).Update(
+		"attendees",
+		gorm.Expr("array_append(attendees, ?)", attendeeEmail),
+	)
 
 	return event.Attendees, nil
 }
@@ -96,7 +111,8 @@ func (r *PostgreEventsRepository) UpdateEvent(
 	ctx context.Context,
 	event models.Event,
 ) (models.Event, error) {
-	r.db.Save(&event)
+	postgresEvent := mapEventToPostgresEvent(event)
+	r.db.WithContext(ctx).Save(postgresEvent)
 
 	return event, nil
 }
@@ -105,7 +121,7 @@ func (r *PostgreEventsRepository) DeleteEventById(
 	ctx context.Context,
 	id string,
 ) (models.Event, error) {
-	r.db.Delete(&models.Event{})
+	r.db.WithContext(ctx).Delete(&event{}, id)
 	return models.Event{}, nil
 }
 
